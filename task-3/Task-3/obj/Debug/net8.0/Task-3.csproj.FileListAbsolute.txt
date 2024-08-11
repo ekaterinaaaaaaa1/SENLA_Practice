@@ -1,0 +1,15 @@
+C:\COURSES\SENLA_Practice\task-3\Task-3\bin\Debug\net8.0\Task-3.exe
+C:\COURSES\SENLA_Practice\task-3\Task-3\bin\Debug\net8.0\Task-3.deps.json
+C:\COURSES\SENLA_Practice\task-3\Task-3\bin\Debug\net8.0\Task-3.runtimeconfig.json
+C:\COURSES\SENLA_Practice\task-3\Task-3\bin\Debug\net8.0\Task-3.dll
+C:\COURSES\SENLA_Practice\task-3\Task-3\bin\Debug\net8.0\Task-3.pdb
+C:\COURSES\SENLA_Practice\task-3\Task-3\obj\Debug\net8.0\Task-3.GeneratedMSBuildEditorConfig.editorconfig
+C:\COURSES\SENLA_Practice\task-3\Task-3\obj\Debug\net8.0\Task-3.AssemblyInfoInputs.cache
+C:\COURSES\SENLA_Practice\task-3\Task-3\obj\Debug\net8.0\Task-3.AssemblyInfo.cs
+C:\COURSES\SENLA_Practice\task-3\Task-3\obj\Debug\net8.0\Task-3.csproj.CoreCompileInputs.cache
+C:\COURSES\SENLA_Practice\task-3\Task-3\obj\Debug\net8.0\Task-3.sourcelink.json
+C:\COURSES\SENLA_Practice\task-3\Task-3\obj\Debug\net8.0\Task-3.dll
+C:\COURSES\SENLA_Practice\task-3\Task-3\obj\Debug\net8.0\refint\Task-3.dll
+C:\COURSES\SENLA_Practice\task-3\Task-3\obj\Debug\net8.0\Task-3.pdb
+C:\COURSES\SENLA_Practice\task-3\Task-3\obj\Debug\net8.0\Task-3.genruntimeconfig.cache
+C:\COURSES\SENLA_Practice\task-3\Task-3\obj\Debug\net8.0\ref\Task-3.dll
