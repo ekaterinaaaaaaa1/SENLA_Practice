@@ -1,14 +1,26 @@
 ﻿namespace Task_1
 {
     using System;
+    using System.Text;
+    using Task_1.Exceptions;
 
     class Program
     {
+        /// <summary>
+        /// Checks whether an integer is even.
+        /// </summary>
+        /// <param name="number">Number to check.</param>
+        /// <returns>True if even, false if odd.</returns>
         public static bool isEven(int number)
         {
             return number % 2 == 0;
         }
 
+        /// <summary>
+        /// Checks whether an integer is prime.
+        /// </summary>
+        /// <param name="number">Number to check.</param>
+        /// <returns>True if prime, false if composite.</returns>
         public static bool isPrime(int number)
         {
             int i = 2;
@@ -27,32 +39,52 @@
 
         static void Main()
         {
-            Console.Write("Введите целое число: ");
-            bool result = int.TryParse(Console.ReadLine(), out int number);
-            if (!result)
+            int number = 0;
+            try
             {
-                Console.WriteLine("Ошибка: введено не целое число!");
+                Console.Write("Введите натуральное число: ");
+                number = Convert.ToInt32(Console.ReadLine());
+                if (number <= 0)
+                {
+                    throw new NotPositiveIntegerNumberException();
+                }
+            }
+            catch (FormatException)
+            {
+                Console.WriteLine("Ошибка: неверный тип входных данных!");
+                Environment.Exit(0);
+            }
+            catch (OverflowException)
+            {
+                Console.WriteLine("Ошибка: введённое число по модулю превосходит максимально возможное значение!");
+                Environment.Exit(0);
+            }
+            catch (NotPositiveIntegerNumberException)
+            {
+                Console.WriteLine("Ошибка: введено не натуральное число!");
                 Environment.Exit(0);
             }
 
-            Console.Write($"Число {number} - ");
+            StringBuilder sb = new StringBuilder($"Число {number} - ");
             if (isPrime(number))
             {
-                Console.Write("простое ");
+                sb.Append("простое ");
             }
             else
             {
-                Console.Write("составное ");
+                sb.Append("составное ");
             }
             if (isEven(number))
             {
-                Console.Write("чётное ");
+                sb.Append("чётное ");
             }
             else
             {
-                Console.Write("нечётное ");
+                sb.Append("нечётное ");
             }
-            Console.WriteLine("число");
+            sb.Append("число");
+
+            Console.WriteLine(sb.ToString());
         }
     }
 }
