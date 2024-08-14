@@ -10,7 +10,7 @@
         /// Calculates the greatest common divisor of two numbers.
         /// </summary>
         /// <param name="firstNum">The first number.</param>
-        /// <param name="secondNum">The seconf number.</param>
+        /// <param name="secondNum">The second number.</param>
         /// <returns>The greatest common divisor of firstNum and secondNum.</returns>
         public static int GreatestCommonDivisor(int firstNum, int secondNum)
         {
@@ -33,7 +33,7 @@
         /// Calculates the least common multiple of two numbers.
         /// </summary>
         /// <param name="firstNum">The first number.</param>
-        /// <param name="secondNum">The seconf number.</param>
+        /// <param name="secondNum">The second number.</param>
         /// <returns>The least common multiple of firstNum and secondNum.</returns>
         public static int LeastCommonMultiple(int firstNum, int secondNum)
         {
