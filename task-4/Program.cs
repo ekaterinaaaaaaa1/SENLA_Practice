@@ -1,25 +1,33 @@
-﻿namespace Task_4
+﻿namespace task_4
 {
+    using task_4.Exceptions;
     class Program
     {
         static void Main()
         {
-            Console.Write("Введите текст: ");
-            string text = Console.ReadLine().ToLower();
-            if (text == null)
+            string text = "", word = "";
+            try
             {
-                Console.WriteLine("Ошибка: пустая строка!");
-                Environment.Exit(0);
+                Console.Write("Введите текст: ");
+                text = Console.ReadLine().ToLower();
+                if (text == "")
+                {
+                    throw new EmptyStringException();
+                }
+                Console.Write("Введите слово: ");
+                word = Console.ReadLine().ToLower();
+                if (word == "")
+                {
+                    throw new EmptyStringException();
+                }
             }
-            Console.Write("Введите слово: ");
-            string word = Console.ReadLine().ToLower();
-            if (word == null)
+            catch (EmptyStringException)
             {
                 Console.WriteLine("Ошибка: пустая строка!");
                 Environment.Exit(0);
             }
 
-            Console.WriteLine("Слово употребляется в тексте {0} раз(-а)", text.Replace(word, "*").Count(x => x == '*'));
+            Console.WriteLine("Слово употребляется в тексте {0} раз(-а).", text.Replace(word, "*").Count(x => x == '*'));
         }
     }
 }
