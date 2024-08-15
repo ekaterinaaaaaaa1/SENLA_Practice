@@ -1,10 +1,10 @@
 ﻿namespace task_2.Exceptions
 {
-    public class NotPositiveIntegerNumberException : Exception
+    public class CustomOverflowException : Exception
     {
         public string numberOfInput { get; }
 
-        public NotPositiveIntegerNumberException(string numberOfInput)
+        public CustomOverflowException(string numberOfInput)
         {
             this.numberOfInput = numberOfInput;
         }

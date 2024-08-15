@@ -1,7 +1,5 @@
 ﻿namespace task_2
 {
-    using System.Diagnostics;
-    using System.Text;
     using task_2.Exceptions;
 
     class Program
@@ -40,62 +38,53 @@
             return firstNum * secondNum / GreatestCommonDivisor(firstNum, secondNum);
         }
 
+        public static int Enter(string numberOfInput)
+        {
+            int number = 0;
+            try
+            {
+                Console.Write($"Введите {numberOfInput} число: ");
+                number = Convert.ToInt32(Console.ReadLine());
+
+                if (number <= 0)
+                {
+                    throw new NotPositiveIntegerNumberException(numberOfInput);
+                }
+            }
+            catch (FormatException)
+            {
+                throw new CustomFormatException(numberOfInput);
+            }
+            catch (OverflowException)
+            {
+                throw new CustomOverflowException(numberOfInput);
+            }
+
+            return number;
+        }
+
         static void Main()
         {
             int firstNum = 0, secondNum = 0;
 
             try
             {
-                Console.Write("Введите первое число: ");
-                firstNum = Convert.ToInt32(Console.ReadLine());
-
-                if (firstNum <= 0)
-                {
-                    throw new NotPositiveIntegerNumberException();
-                }
-
-                Console.Write("Введите второе число: ");
-                secondNum = Convert.ToInt32(Console.ReadLine());
-
-                if (secondNum <= 0)
-                {
-                    throw new NotPositiveIntegerNumberException();
-                }
+                firstNum = Enter("первое");
+                secondNum = Enter("второе");
             }
-            catch (FormatException e)
+            catch (CustomFormatException e)
             {
-                StackTrace st = new StackTrace(e, true);
-                StackFrame frame = st.GetFrame(st.FrameCount - 1);
-
-                StringBuilder sb = new StringBuilder("Ошибка: неверный тип данных при вводе");
-                sb.Append(frame.GetFileLineNumber() == 50 ? " первого" : " второго");
-                sb.Append(" числа!");
-
-                Console.WriteLine(sb.ToString());
+                Console.WriteLine($"Ошибка: введённое {e.numberOfInput} значение неверного типа данных!");
                 Environment.Exit(0);
             }
-            catch (OverflowException e)
+            catch (CustomOverflowException e)
             {
-                StackTrace st = new StackTrace(e, true);
-                StackFrame frame = st.GetFrame(st.FrameCount - 1);
-
-                StringBuilder sb = new StringBuilder("Ошибка: введённое");
-                sb.Append(frame.GetFileLineNumber() == 50 ? " первое" : " второе");
-                sb.Append(" число по модулю превосходит максимально возможное значение!");
-
-                Console.WriteLine(sb.ToString());
+                Console.WriteLine($"Ошибка: введённое {e.numberOfInput} число по модулю превышает максимально возможное значение!");
                 Environment.Exit(0);
             }
             catch (NotPositiveIntegerNumberException e)
             {
-                StackTrace st = new StackTrace(e, true);
-                StackFrame frame = st.GetFrame(st.FrameCount - 1);
-
-                StringBuilder sb = new StringBuilder("Ошибка: введённое");
-                sb.Append(frame.GetFileLineNumber() == 54 ? " первое" : " второе");
-                sb.Append(" число не натуральное!");
-
-                Console.WriteLine(sb.ToString());
+                Console.WriteLine($"Ошибка: введённое {e.numberOfInput} число не натуральное!");
                 Environment.Exit(0);
             }
 
