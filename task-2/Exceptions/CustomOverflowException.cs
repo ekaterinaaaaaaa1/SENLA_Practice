@@ -2,11 +2,8 @@
 {
     public class CustomOverflowException : Exception
     {
-        public string numberOfInput { get; }
-
-        public CustomOverflowException(string numberOfInput)
+        public CustomOverflowException(string? message, Exception? innerException) : base(message, innerException)
         {
-            this.numberOfInput = numberOfInput;
         }
     }
 }

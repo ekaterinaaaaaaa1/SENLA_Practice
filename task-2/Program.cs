@@ -48,16 +48,16 @@
 
                 if (number <= 0)
                 {
-                    throw new NotPositiveIntegerNumberException(numberOfInput);
+                    throw new NotPositiveIntegerNumberException($"Ошибка: введённое {numberOfInput} число не натуральное!");
                 }
             }
-            catch (FormatException)
+            catch (FormatException e)
             {
-                throw new CustomFormatException(numberOfInput);
+                throw new CustomFormatException($"Ошибка: введённое {numberOfInput} значение неверного типа данных!", e);
             }
-            catch (OverflowException)
+            catch (OverflowException e)
             {
-                throw new CustomOverflowException(numberOfInput);
+                throw new CustomOverflowException($"Ошибка: введённое {numberOfInput} число по модулю превышает максимально возможное значение!", e);
             }
 
             return number;
@@ -74,17 +74,19 @@
             }
             catch (CustomFormatException e)
             {
-                Console.WriteLine($"Ошибка: введённое {e.numberOfInput} значение неверного типа данных!");
+                Console.WriteLine(e.InnerException.Message);
+                Console.WriteLine(e.Message);
                 Environment.Exit(0);
             }
             catch (CustomOverflowException e)
             {
-                Console.WriteLine($"Ошибка: введённое {e.numberOfInput} число по модулю превышает максимально возможное значение!");
+                Console.WriteLine(e.InnerException.Message);
+                Console.WriteLine(e.Message);
                 Environment.Exit(0);
             }
             catch (NotPositiveIntegerNumberException e)
             {
-                Console.WriteLine($"Ошибка: введённое {e.numberOfInput} число не натуральное!");
+                Console.WriteLine(e.Message);
                 Environment.Exit(0);
             }
 

@@ -2,11 +2,8 @@
 {
     public class NotPositiveIntegerNumberException : Exception
     {
-        public string numberOfInput { get; }
-
-        public NotPositiveIntegerNumberException(string numberOfInput)
+        public NotPositiveIntegerNumberException(string? message) : base(message)
         {
-            this.numberOfInput = numberOfInput;
         }
     }
 }

@@ -2,11 +2,9 @@
 {
     public class CustomFormatException : Exception
     {
-        public string numberOfInput { get; }
 
-        public CustomFormatException(string numberOfInput)
+        public CustomFormatException(string message, Exception innerException) : base(message, innerException)
         {
-            this.numberOfInput = numberOfInput;
         }
     }
 }
