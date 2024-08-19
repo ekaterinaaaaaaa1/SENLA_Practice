@@ -6,7 +6,7 @@
     {
         static void Main()
         {
-            string str = "";
+            string str = string.Empty;
             try
             {
                 Console.Write("Введите предложение: ");
@@ -23,7 +23,7 @@
                 Environment.Exit(0);
             }
             
-            string[] words = str.Split(" ");
+            string[] words = str.Split(" ", StringSplitOptions.RemoveEmptyEntries);
             Array.Sort(words);
             foreach (string word in words)
             {
