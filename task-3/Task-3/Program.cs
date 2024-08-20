@@ -1,6 +1,7 @@
 ﻿namespace Task_3
 {
     using System.Globalization;
+    using static System.String;
     using Task_3.Exceptions;
     class Program
     {
@@ -12,7 +13,7 @@
                 Console.Write("Введите предложение: ");
                 str = Console.ReadLine();
 
-                if (str == "")
+                if (IsNullOrEmpty(str))
                 {
                     throw new EmptyStringException();
                 }
