@@ -9,7 +9,7 @@ namespace WordsCounter
     public class WordsCounter
     {
         /// <summary>
-        /// Outputs words in alhapetical order with a capital letter and counts their number.
+        /// Outputs words in alphabetical order with a capital letter and counts their number.
         /// </summary>
         public static void Count()
         {
