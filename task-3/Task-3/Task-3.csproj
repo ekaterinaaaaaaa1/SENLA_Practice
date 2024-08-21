@@ -8,4 +8,14 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\WordsCounter\WordsCounter.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="WordsCounter">
+      <HintPath>..\WordsCounter\bin\Debug\net8.0\WordsCounter.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>
