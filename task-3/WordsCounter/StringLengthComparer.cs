@@ -10,7 +10,7 @@
         /// </summary>
         /// <param name="str1">The first string to compare.</param>
         /// <param name="str2">The second string to compare.</param>
-        /// <returns>A positive integer if the first string length is longer, a negative integer if the second string length is longer, zero if the lengths are equal.</returns>
+        /// <returns>A positive integer if the length of str1 is longer, a negative integer if the length of str2 is longer, zero if the lengths are equal.</returns>
         /// <exception cref="ArgumentNullException"></exception>
         public int Compare(string? str1, string? str2)
         {
