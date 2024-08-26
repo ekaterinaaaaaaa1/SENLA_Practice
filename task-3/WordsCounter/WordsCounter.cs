@@ -30,15 +30,22 @@ namespace WordsCounter
                 Environment.Exit(0);
             }
 
-            string[] words = str.Split(" ", StringSplitOptions.RemoveEmptyEntries);
-            Array.Sort(words);
-            foreach (string word in words)
+            try
             {
-                TextInfo textInfo = new CultureInfo("RU", false).TextInfo;
-                Console.WriteLine(textInfo.ToTitleCase(word));
+                string[] words = str.Split(" ", StringSplitOptions.RemoveEmptyEntries);
+                Array.Sort(words, new StringLengthComparer());
+                foreach (string word in words)
+                {
+                    TextInfo textInfo = new CultureInfo("RU", false).TextInfo;
+                    Console.WriteLine(textInfo.ToTitleCase(word));
+                }
+                Console.WriteLine($"Количество слов: {words.Length}");
+                Console.ReadKey();
             }
-            Console.WriteLine($"Количество слов: {words.Length}");
-            Console.ReadKey();
+            catch (ArgumentNullException e)
+            {
+                Console.WriteLine(e.Message);
+            }
         }
     }
 }
