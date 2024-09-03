@@ -5,9 +5,7 @@
     class Program
     {
         static void Main()
-        {
-            ResourceManager resourceManager = new ResourceManager("task_4.Resources", typeof(Program).Assembly);
-            
+        {            
             string text = string.Empty, word = string.Empty;
             try
             {
@@ -26,11 +24,11 @@
             }
             catch (EmptyStringException)
             {
-                Console.WriteLine(resourceManager.GetString("EmptyString"));
+                Console.WriteLine(Resources.EmptyString);
                 Environment.Exit(0);
             }
 
-            Console.WriteLine(resourceManager.GetString("WordsNumber"), text.Replace(word, "*").Count(x => x == '*'));
+            Console.WriteLine(string.Format(Resources.WordsNumber, text.Replace(word, "*").Count(x => x == '*')));
         }
     }
 }
