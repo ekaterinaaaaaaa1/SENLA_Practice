@@ -4,9 +4,14 @@
     {
         const int MAX_VALUE = 100;
         
-        public static bool isPalindrome(int number)
+        /// <summary>
+        /// Checks whether an integer is a palindrome or not.
+        /// </summary>
+        /// <param name="number">Integer to check.</param>
+        /// <returns>True if a palindrome, false if not a palindrome.</returns>
+        public static bool IsPalindrome(int number)
         {
-            if (number == reverseNumber(number))
+            if (number == ReverseNumber(number))
             {
                 return true;
             }
@@ -14,7 +19,12 @@
             return false;
         }
 
-        public static int reverseNumber(int number)
+        /// <summary>
+        /// Writes an integer in reverse.
+        /// </summary>
+        /// <param name="number">Integer to reverse.</param>
+        /// <returns>Integer number in reverse.</returns>
+        public static int ReverseNumber(int number)
         {
             char[] charArray = number.ToString().ToCharArray();
             Array.Reverse(charArray);
@@ -39,7 +49,7 @@
             Console.WriteLine($"Числа-палиндромы от 0 до {N}:");
             for (int i = 0; i <= N; i++)
             {
-                if (isPalindrome(i))
+                if (IsPalindrome(i))
                 {
                     Console.WriteLine(i);
                 }
