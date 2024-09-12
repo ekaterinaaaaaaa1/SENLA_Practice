@@ -1,5 +1,8 @@
 ﻿namespace task_6
 {
+    /// <summary>
+    /// Represent a backpack with items and value.
+    /// </summary>
     public class Backpack
     {
         private Item[] _items;
