@@ -3,6 +3,8 @@
     class Program
     {
         const int MAX_VALUE = 100;
+
+        delegate bool Check(int value);
         
         /// <summary>
         /// Checks whether an integer is a palindrome or not.
@@ -46,10 +48,12 @@
                 Environment.Exit(0);
             }
 
+            Check check = IsPalindrome;
+
             Console.WriteLine($"Числа-палиндромы от 0 до {N}:");
             for (int i = 0; i <= N; i++)
             {
-                if (IsPalindrome(i))
+                if (check(i))
                 {
                     Console.WriteLine(i);
                 }
