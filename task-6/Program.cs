@@ -31,7 +31,7 @@
                     {
                         if (items[0].Volume <= j)
                         {
-                            backpack[i][j] = new Backpack(new Item[] { items[0] }, items[0].Value);
+                            backpack[i][j] = new Backpack(new Item[] { items[0] }, items[0].Price);
                         }
                         else
                         {
@@ -46,8 +46,8 @@
                         }
                         else
                         {
-                            int optValue = items[i - 1].Value + backpack[i - 1][j - items[i - 1].Volume].Value;
-                            if (backpack[i - 1][j].Value > optValue)
+                            int optValue = items[i - 1].Price + backpack[i - 1][j - items[i - 1].Volume].Price;
+                            if (backpack[i - 1][j].Price > optValue)
                             {
                                 backpack[i][j] = backpack[i - 1][j];
                             }
@@ -60,11 +60,11 @@
                 }
             }
 
-            Console.WriteLine($"Суммарная ценность груза: {backpack[numberOfItems][CAPACITY].Value}");
+            Console.WriteLine($"Суммарная ценность груза: {backpack[numberOfItems][CAPACITY].Price}");
 
             foreach (Item item in backpack[numberOfItems][CAPACITY].Items)
             {
-                Console.WriteLine($"{item.Name}: вес - {item.Volume}, стоимость - {item.Value}");
+                Console.WriteLine($"{item.Name}: вес - {item.Volume}, стоимость - {item.Price}");
             }
         }
     }

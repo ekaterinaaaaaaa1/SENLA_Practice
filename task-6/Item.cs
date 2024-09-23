@@ -5,22 +5,17 @@
     /// </summary>
     public class Item
     {
-        private string _name;
         private int _volume;
-        private int _value;
+        private int _price;
 
-        public Item(string name, int volume, int value)
+        public Item(string name, int volume, int price)
         {
-            _name = name;
+            Name = name;
             _volume = volume;
-            _value = value;
+            _price = price;
         }
 
-        public string Name
-        {
-            get { return _name; }
-            set { _name = value; }
-        }
+        public string Name { get; set; }
 
         public int Volume
         {
@@ -32,13 +27,13 @@
             }
         }
 
-        public int Value
+        public int Price
         {
-            get { return _value; }
+            get { return _price; }
             set
             {
                 if (value > 0)
-                _value = value;
+                _price = value;
             }
         }
     }

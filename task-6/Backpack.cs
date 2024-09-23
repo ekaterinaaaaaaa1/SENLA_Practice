@@ -5,16 +5,13 @@
     /// </summary>
     public class Backpack
     {
-        private Item[] _items;
-        private int _value;
-
-        public Backpack(Item[] items, int value)
+        public Backpack(Item[] items, int price)
         {
-            _items = items;
-            _value = value;
+            Items = items;
+            Price = price;
         }
 
-        public Item[] Items { get { return _items; } }
-        public int Value { get { return _value; } }
+        public Item[] Items { get; }
+        public int Price { get; }
     }
 }
