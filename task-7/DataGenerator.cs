@@ -2,50 +2,63 @@
 
 namespace task_7
 {
+    /// <summary>
+    /// Generates random data to analyse the collections methods.
+    /// </summary>
+    /// <typeparam name="T">Type of the random data.</typeparam>
     public class DataGenerator<T>
     {
-        private const int NUMBER_OF_CALLS = 100;
-        private const int LENGTH_OF_ARRAY = 1000;
-
-        //private static T[]? data = new T[LENGTH_OF_ARRAY];
-        //private static T[]? items = new T[NUMBER_OF_CALLS];
-
-        //private static int[] indexes = new int[NUMBER_OF_CALLS];
-
-        public T[]? Items { get; }
-        public T[]? Data { get; }
+        /// <summary>
+        /// Initial data.
+        /// </summary>
+        public T[] Data { get; }
+        /// <summary>
+        /// Data to add items to the collection.
+        /// </summary>
+        public T[] Items { get; }
+        /// <summary>
+        /// Indexes to use in some methods.
+        /// </summary>
         public int[] Indexes { get; }
 
-        public DataGenerator()
+        public DataGenerator(int lengthOfArray, int numberOfCalls)
         {
-            Data = GenerateData(LENGTH_OF_ARRAY);
-            Items = GenerateData(NUMBER_OF_CALLS);
-            Indexes = GenerateDataInt(NUMBER_OF_CALLS);
+            Data = GenerateData(lengthOfArray);
+            Items = GenerateData(numberOfCalls);
+            Indexes = GenerateDataInt(numberOfCalls, lengthOfArray);
         }
 
-        private T[]? GenerateData(int dataSize)
+        private T[] GenerateData(int dataSize)
         {
             if (typeof(T) == typeof(int))
             {
-                return GenerateDataInt(dataSize) as T[];
+                return GenerateDataInt(dataSize, dataSize).Cast<T>().ToArray();
             }
 
             if (typeof(T) == typeof(double))
             {
-                return GenerateDataDouble(dataSize) as T[];
+                return GenerateDataDouble(dataSize).Cast<T>().ToArray();
             }
 
-            return GenerateDataString(dataSize) as T[];
+            return GenerateDataString(dataSize).Cast<T>().ToArray();
         }
 
-        private int[] GenerateDataInt(int dataSize)
+        private int[] GenerateDataInt(int dataSize, int maxRandom)
         {
             int[] generatedDataInt = new int[dataSize];
             Random random = new Random();
 
             for (int i = 0; i < dataSize; i++)
             {
-                generatedDataInt[i] = random.Next();
+                int generated = random.Next(maxRandom - i);
+                if (!generatedDataInt.Contains(generated))
+                {
+                    generatedDataInt[i] = generated;
+                }
+                else
+                {
+                    i--;
+                }
             }
 
             return generatedDataInt;
@@ -58,7 +71,15 @@ namespace task_7
 
             for (int i = 0; i < dataSize; i++)
             {
-                generatedDataDouble[i] = random.NextDouble();
+                double generated = random.NextDouble();
+                if (!generatedDataDouble.Contains(generated))
+                {
+                    generatedDataDouble[i] = generated;
+                }
+                else
+                {
+                    i--;
+                }
             }
 
             return generatedDataDouble;
@@ -82,7 +103,15 @@ namespace task_7
                     stringBuilder.Append(alphabet[random.Next(alphabetLength)]);
                 }
 
-                generatedDataString[i] = stringBuilder.ToString();
+                string generated = stringBuilder.ToString();
+                if (!generatedDataString.Contains(generated))
+                {
+                    generatedDataString[i] = generated;
+                }
+                else
+                {
+                    i--;
+                }
             }
 
             return generatedDataString;
