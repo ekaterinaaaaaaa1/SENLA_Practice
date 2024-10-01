@@ -17,11 +17,5 @@ namespace task_7
             dataGenerator = new DataGenerator<T>(lengthOfArray, numberOfCalls);
             stopWatch = new Stopwatch();
         }
-
-        public abstract long Add();
-        public abstract long Insert();
-        public abstract long Delete();
-        public abstract long Find();
-        public abstract long Sort();
     }
 }

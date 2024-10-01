@@ -3,11 +3,15 @@
     /// <summary>
     /// Analyses List<T> methods.
     /// </summary>
-    public class ListAnalyser<T> : Analyser<T> where T : Comparer<T>
+    public class ListAnalyser<T> : Analyser<T> where T : IComparable<T>
     {
         public ListAnalyser(int lengthOfArray, int numberOfCalls) : base(lengthOfArray, numberOfCalls) { }
 
-        public override long Add()
+        /// <summary>
+        /// Analyses Add method.
+        /// </summary>
+        /// <returns>Returns the number of nanoseconds spent on executing the method.</returns>
+        public double Add()
         {
             List<T> list = new List<T>(dataGenerator.Data);
 
@@ -18,57 +22,73 @@
             }
             stopWatch.Stop();
 
-            return stopWatch.ElapsedMilliseconds;
+            return stopWatch.Elapsed.TotalNanoseconds;
         }
 
-        public override long Insert()
+        /// <summary>
+        /// Analyses Insert method.
+        /// </summary>
+        /// <returns>Returns the number of nanoseconds spent on executing the method.</returns>
+        public double Insert()
         {
             List<T> list = new List<T>(dataGenerator.Data);
 
             stopWatch.Restart();
             for (int i = 0; i < NumberOfCalls; i++)
             {
-                list.Insert(dataGenerator.Indexes[i], dataGenerator.Items[i]);
+                list.Insert(dataGenerator.InsertIndexes[i], dataGenerator.Items[i]);
             }
             stopWatch.Stop();
 
-            return stopWatch.ElapsedMilliseconds;
+            return stopWatch.Elapsed.TotalNanoseconds;
         }
 
-        public override long Delete()
+        /// <summary>
+        /// Analyses Remove method.
+        /// </summary>
+        /// <returns>Returns the number of nanoseconds spent on executing the method.</returns>
+        public double Remove()
         {
             List<T> list = new List<T>(dataGenerator.Data);
-            List<T> deleted = new List<T>();
+            List<T> removed = new List<T>();
             for (int i = 0; i < NumberOfCalls; i++)
             {
-                deleted.Add(dataGenerator.Data[dataGenerator.Indexes[i]]);
+                removed.Add(dataGenerator.Data[dataGenerator.RemoveIndexes[i]]);
             }
-
-            stopWatch.Restart();
-            for (int i = 0; i <= NumberOfCalls; i++)
-            {
-                list.Remove(deleted[i]);
-            }
-            stopWatch.Stop();
-
-            return stopWatch.ElapsedMilliseconds;
-        }
-
-        public override long Find()
-        {
-            List<T> list = new List<T>(dataGenerator.Data);
 
             stopWatch.Restart();
             for (int i = 0; i < NumberOfCalls; i++)
             {
-                list.Find(a => a == dataGenerator.Data[dataGenerator.Indexes[i]]);
+                list.Remove(removed[i]);
             }
             stopWatch.Stop();
 
-            return stopWatch.ElapsedMilliseconds;
+            return stopWatch.Elapsed.TotalNanoseconds;
         }
 
-        public override long Sort()
+        /// <summary>
+        /// Analyses Find method.
+        /// </summary>
+        /// <returns>Returns the number of nanoseconds spent on executing the method.</returns>
+        public double Find()
+        {
+            List<T> list = new List<T>(dataGenerator.Data);
+
+            stopWatch.Restart();
+            for (int i = 0; i < NumberOfCalls; i++)
+            {
+                list.Find(a => a.Equals(dataGenerator.Data[dataGenerator.FindIndexes[i]]));
+            }
+            stopWatch.Stop();
+
+            return stopWatch.Elapsed.TotalNanoseconds;
+        }
+
+        /// <summary>
+        /// Analyses Sort method.
+        /// </summary>
+        /// <returns>Returns the number of nanoseconds spent on executing the method.</returns>
+        public double Sort()
         {
             List<T> list = new List<T>(dataGenerator.Data);
             
@@ -76,7 +96,25 @@
             list.Sort();
             stopWatch.Stop();
 
-            return stopWatch.ElapsedMilliseconds;
+            return stopWatch.Elapsed.TotalNanoseconds;
+        }
+
+        /// <summary>
+        /// Analyses Contains method.
+        /// </summary>
+        /// <returns>Returns the number of nanoseconds spent on executing the method.</returns>
+        public double Contains()
+        {
+            List<T> list = new List<T>(dataGenerator.Data);
+
+            stopWatch.Restart();
+            for (int i = 0; i < NumberOfCalls; i++)
+            {
+                list.Contains(dataGenerator.Data[dataGenerator.FindIndexes[i]]);
+            }
+            stopWatch.Stop();
+
+            return stopWatch.Elapsed.TotalNanoseconds;
         }
     }
 }

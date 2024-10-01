@@ -17,22 +17,32 @@ namespace task_7
         /// </summary>
         public T[] Items { get; }
         /// <summary>
-        /// Indexes to use in some methods.
+        /// Indexes to use in Insert method.
         /// </summary>
-        public int[] Indexes { get; }
+        public int[] InsertIndexes { get; }
+        /// <summary>
+        /// Indexes to use in Remove method.
+        /// </summary>
+        public int[] RemoveIndexes { get; }
+        /// <summary>
+        /// Indexes to use in Find method.
+        /// </summary>
+        public int[] FindIndexes { get; }
 
         public DataGenerator(int lengthOfArray, int numberOfCalls)
         {
             Data = GenerateData(lengthOfArray);
             Items = GenerateData(numberOfCalls);
-            Indexes = GenerateDataInt(numberOfCalls, lengthOfArray);
+            InsertIndexes = GenerateInsertIndexes(numberOfCalls, lengthOfArray);
+            RemoveIndexes = GenerateRemoveIndexes(numberOfCalls, lengthOfArray);
+            FindIndexes = GenerateFindIndexes(numberOfCalls, lengthOfArray);
         }
 
         private T[] GenerateData(int dataSize)
         {
             if (typeof(T) == typeof(int))
             {
-                return GenerateDataInt(dataSize, dataSize).Cast<T>().ToArray();
+                return GenerateDataInt(dataSize).Cast<T>().ToArray();
             }
 
             if (typeof(T) == typeof(double))
@@ -43,14 +53,15 @@ namespace task_7
             return GenerateDataString(dataSize).Cast<T>().ToArray();
         }
 
-        private int[] GenerateDataInt(int dataSize, int maxRandom)
+        private int[] GenerateDataInt(int dataSize)
         {
             int[] generatedDataInt = new int[dataSize];
             Random random = new Random();
 
             for (int i = 0; i < dataSize; i++)
             {
-                int generated = random.Next(maxRandom - i);
+                int generated = random.Next();
+
                 if (!generatedDataInt.Contains(generated))
                 {
                     generatedDataInt[i] = generated;
@@ -115,6 +126,45 @@ namespace task_7
             }
 
             return generatedDataString;
+        }
+
+        private int[] GenerateInsertIndexes(int dataSize, int maxRandom)
+        {
+            int[] generatedInsertIndexes = new int[dataSize];
+            Random random = new Random();
+
+            for (int i = 0; i < dataSize; i++)
+            {
+                generatedInsertIndexes[i] = random.Next(maxRandom + i);
+            }
+
+            return generatedInsertIndexes;
+        }
+
+        private int[] GenerateRemoveIndexes(int dataSize, int maxRandom)
+        {
+            int[] generatedRemoveIndexes = new int[dataSize];
+            Random random = new Random();
+
+            for (int i = 0; i < dataSize; i++)
+            {
+                generatedRemoveIndexes[i] = random.Next(maxRandom - i);
+            }
+
+            return generatedRemoveIndexes;
+        }
+
+        private int[] GenerateFindIndexes(int dataSize, int maxRandom)
+        {
+            int[] generatedFindIndexes = new int[dataSize];
+            Random random = new Random();
+
+            for (int i = 0; i < dataSize; i++)
+            {
+                generatedFindIndexes[i] = random.Next(maxRandom);
+            }
+
+            return generatedFindIndexes;
         }
     }
 }
