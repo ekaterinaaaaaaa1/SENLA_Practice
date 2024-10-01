@@ -3,6 +3,7 @@
     /// <summary>
     /// Analyses Stack<T> methods.
     /// </summary>
+    /// <typeparam name="T">Data type of Stack.</typeparam>
     public class StackAnalyser<T> : Analyser<T> where T : IComparable<T>
     {
         public StackAnalyser(int lengthOfArray, int numberOfCalls) : base(lengthOfArray, numberOfCalls) { }

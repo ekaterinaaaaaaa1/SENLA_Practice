@@ -3,6 +3,7 @@
     /// <summary>
     /// Analyses Queue<T> methods.
     /// </summary>
+    /// <typeparam name="T">Data type of Queue.</typeparam>
     public class QueueAnalyser<T> : Analyser<T> where T : IComparable<T>
     {
         public QueueAnalyser(int lengthOfArray, int numberOfCalls) : base(lengthOfArray, numberOfCalls) { }

@@ -3,6 +3,7 @@
     /// <summary>
     /// Analyses HashSet<T> methods.
     /// </summary>
+    /// <typeparam name="T">Data type of HashSet.</typeparam>
     public class HashSetAnalyser<T> : Analyser<T> where T : IComparable<T>
     {
         public HashSetAnalyser(int lengthOfArray, int numberOfCalls) : base(lengthOfArray, numberOfCalls) { }

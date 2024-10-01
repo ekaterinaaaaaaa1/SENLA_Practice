@@ -3,6 +3,7 @@
     /// <summary>
     /// Analyses Dictionary<T> methods.
     /// </summary>
+    /// <typeparam name="T">Data type of Dictionary.</typeparam>
     public class DictionaryAnalyser<T> : Analyser<T> where T : IComparable<T>
     {
         public DictionaryAnalyser(int lengthOfArray, int numberOfCalls) : base(lengthOfArray, numberOfCalls) { }

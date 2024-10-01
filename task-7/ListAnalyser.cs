@@ -3,6 +3,7 @@
     /// <summary>
     /// Analyses List<T> methods.
     /// </summary>
+    /// <typeparam name="T">Data type of List.</typeparam>
     public class ListAnalyser<T> : Analyser<T> where T : IComparable<T>
     {
         public ListAnalyser(int lengthOfArray, int numberOfCalls) : base(lengthOfArray, numberOfCalls) { }

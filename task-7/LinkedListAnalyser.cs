@@ -1,10 +1,9 @@
-﻿using System.Collections.Generic;
-
-namespace task_7
+﻿namespace task_7
 {
     /// <summary>
     /// Analyses LinkedList<T> methods.
     /// </summary>
+    /// <typeparam name="T">Data type of LinkedList.</typeparam>
     public class LinkedListAnalyser<T> : Analyser<T> where T : IComparable<T>
     {
         public LinkedListAnalyser(int lengthOfArray, int numberOfCalls) : base(lengthOfArray, numberOfCalls) { }
