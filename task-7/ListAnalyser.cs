@@ -50,16 +50,11 @@
         public double Remove()
         {
             List<T> list = new List<T>(dataGenerator.Data);
-            List<T> removed = new List<T>();
-            for (int i = 0; i < NumberOfCalls; i++)
-            {
-                removed.Add(dataGenerator.Data[dataGenerator.RemoveIndexes[i]]);
-            }
 
             stopWatch.Restart();
             for (int i = 0; i < NumberOfCalls; i++)
             {
-                list.Remove(removed[i]);
+                list.Remove(dataGenerator.Data[dataGenerator.RemoveIndexes[i]]);
             }
             stopWatch.Stop();
 
