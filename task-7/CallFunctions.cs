@@ -6,6 +6,13 @@
     /// <typeparam name="T">Data type of collection.</typeparam>
     public class CallFunctions<T> where T : IComparable<T>
     {
+        private static string timeSpentOnAdd = "Time spent on Add: {0:f2}";
+        private static string timeSpentOnInsert = "Time spent on Insert: {0:f2}";
+        private static string timeSpentOnRemove = "Time spent on Remove: {0:f2}";
+        private static string timeSpentOnFind = "Time spent on Find: {0:f2}";
+        private static string timeSpentOnSort = "Time spent on Sort: {0:f2}";
+        private static string timeSpentOnContains = "Time spent on Contains: {0:f2}";
+
         public CallFunctions() { }
 
         /// <summary>
@@ -14,12 +21,12 @@
         /// <param name="listAnalyser">List to analyse.</param>
         public void CallAllFunctions(ListAnalyser<T> listAnalyser)
         {
-            Console.WriteLine("Time spent on Add: {0:f2}", listAnalyser.Add());
-            Console.WriteLine("Time spent on Insert: {0:f2}", listAnalyser.Insert());
-            Console.WriteLine("Time spent on Remove: {0:f2}", listAnalyser.Remove());
-            Console.WriteLine("Time spent on Find: {0:f2}", listAnalyser.Find());
-            Console.WriteLine("Time spent on Sort: {0:f2}", listAnalyser.Sort());
-            Console.WriteLine("Time spent on Contains: {0:f2}", listAnalyser.Contains());
+            Console.WriteLine(timeSpentOnAdd, listAnalyser.Add());
+            Console.WriteLine(timeSpentOnInsert, listAnalyser.Insert());
+            Console.WriteLine(timeSpentOnRemove, listAnalyser.Remove());
+            Console.WriteLine(timeSpentOnFind, listAnalyser.Find());
+            Console.WriteLine(timeSpentOnSort, listAnalyser.Sort());
+            Console.WriteLine(timeSpentOnContains, listAnalyser.Contains());
         }
 
         /// <summary>
@@ -28,11 +35,11 @@
         /// <param name="linkedListAnalyser">LinkedList to analyse.</param>
         public void CallAllFunctions(LinkedListAnalyser<T> linkedListAnalyser)
         {
-            Console.WriteLine("Time spent on Add: {0:f2}", linkedListAnalyser.Add());
-            Console.WriteLine("Time spent on Insert: {0:f2}", linkedListAnalyser.Insert());
-            Console.WriteLine("Time spent on Remove: {0:f2}", linkedListAnalyser.Remove());
-            Console.WriteLine("Time spent on Find: {0:f2}", linkedListAnalyser.Find());
-            Console.WriteLine("Time spent on Contains: {0:f2}", linkedListAnalyser.Contains());
+            Console.WriteLine(timeSpentOnAdd, linkedListAnalyser.Add());
+            Console.WriteLine(timeSpentOnInsert, linkedListAnalyser.Insert());
+            Console.WriteLine(timeSpentOnRemove, linkedListAnalyser.Remove());
+            Console.WriteLine(timeSpentOnFind, linkedListAnalyser.Find());
+            Console.WriteLine(timeSpentOnContains, linkedListAnalyser.Contains());
         }
 
         /// <summary>
@@ -41,9 +48,9 @@
         /// <param name="queueAnalyser">Queue to analyse.</param>
         public void CallAllFunctions(QueueAnalyser<T> queueAnalyser)
         {
-            Console.WriteLine("Time spent on Add: {0:f2}", queueAnalyser.Add());
-            Console.WriteLine("Time spent on Remove: {0:f2}", queueAnalyser.Remove());
-            Console.WriteLine("Time spent on Contains: {0:f2}", queueAnalyser.Contains());
+            Console.WriteLine(timeSpentOnAdd, queueAnalyser.Add());
+            Console.WriteLine(timeSpentOnRemove, queueAnalyser.Remove());
+            Console.WriteLine(timeSpentOnContains, queueAnalyser.Contains());
         }
 
         /// <summary>
@@ -52,9 +59,9 @@
         /// <param name="stackAnalyser">Stack to analyse.</param>
         public void CallAllFunctions(StackAnalyser<T> stackAnalyser)
         {
-            Console.WriteLine("Time spent on Add: {0:f2}", stackAnalyser.Add());
-            Console.WriteLine("Time spent on Remove: {0:f2}", stackAnalyser.Remove());
-            Console.WriteLine("Time spent on Contains: {0:f2}", stackAnalyser.Contains());
+            Console.WriteLine(timeSpentOnAdd, stackAnalyser.Add());
+            Console.WriteLine(timeSpentOnRemove, stackAnalyser.Remove());
+            Console.WriteLine(timeSpentOnContains, stackAnalyser.Contains());
         }
 
         /// <summary>
@@ -63,9 +70,9 @@
         /// <param name="dictionaryAnalyser">Dictionary to analyse.</param>
         public void CallAllFunctions(DictionaryAnalyser<T> dictionaryAnalyser)
         {
-            Console.WriteLine("Time spent on Add: {0:f2}", dictionaryAnalyser.Add());
-            Console.WriteLine("Time spent on Remove: {0:f2}", dictionaryAnalyser.Remove());
-            Console.WriteLine("Time spent on Contains: {0:f2}", dictionaryAnalyser.Contains());
+            Console.WriteLine(timeSpentOnAdd, dictionaryAnalyser.Add());
+            Console.WriteLine(timeSpentOnRemove, dictionaryAnalyser.Remove());
+            Console.WriteLine(timeSpentOnContains, dictionaryAnalyser.Contains());
         }
 
         /// <summary>
@@ -74,9 +81,9 @@
         /// <param name="hashSetAnalyser">HashSet to analyse.</param>
         public void CallAllFunctions(HashSetAnalyser<T> hashSetAnalyser)
         {
-            Console.WriteLine("Time spent on Add: {0:f2}", hashSetAnalyser.Add());
-            Console.WriteLine("Time spent on Remove: {0:f2}", hashSetAnalyser.Remove());
-            Console.WriteLine("Time spent on Contains: {0:f2}", hashSetAnalyser.Contains());
+            Console.WriteLine(timeSpentOnAdd, hashSetAnalyser.Add());
+            Console.WriteLine(timeSpentOnRemove, hashSetAnalyser.Remove());
+            Console.WriteLine(timeSpentOnContains, hashSetAnalyser.Contains());
         }
     }
 }

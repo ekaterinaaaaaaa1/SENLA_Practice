@@ -12,18 +12,22 @@ namespace task_7
         /// Initial data.
         /// </summary>
         public T[] Data { get; }
+
         /// <summary>
         /// Data to add items to the collection.
         /// </summary>
         public T[] Items { get; }
+
         /// <summary>
         /// Indexes to use in Insert method.
         /// </summary>
         public int[] InsertIndexes { get; }
+
         /// <summary>
         /// Indexes to use in Remove method.
         /// </summary>
         public int[] RemoveIndexes { get; }
+
         /// <summary>
         /// Indexes to use in Find method.
         /// </summary>

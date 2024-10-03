@@ -12,6 +12,7 @@ namespace task_7
         /// An instance of DataGenerator<T>.
         /// </summary>
         public DataGenerator<T> dataGenerator;
+
         /// <summary>
         /// An instance of Stopwatch.
         /// </summary>
@@ -21,6 +22,7 @@ namespace task_7
         /// Contains the length of the initial data.
         /// </summary>
         public int LengthOfArray { get; }
+
         /// <summary>
         /// Contains the number of the methods calls to count the time.
         /// </summary>
