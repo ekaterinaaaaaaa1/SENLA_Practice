@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Passports.Models;
+using Passports.Models.Configuration;
 
 namespace Passports.Database
 {
@@ -15,18 +15,7 @@ namespace Passports.Database
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Passport>(PassportConfigure);
-        }
-
-        public void PassportConfigure(EntityTypeBuilder<Passport> entityTypeBuilder)
-        {
-            entityTypeBuilder.Property(x => x.Series).HasColumnType("char(4)");
-            entityTypeBuilder.Property(x => x.Number).HasColumnType("char(6)");
-            entityTypeBuilder.Property(x => x.Series).HasColumnName("passp_series");
-            entityTypeBuilder.Property(x => x.Number).HasColumnName("passp_number");
-           // entityTypeBuilder.Property(x => x.ID).HasColumnType("SERIAL");
-            entityTypeBuilder.Property(x => x.Id).HasColumnName("id");
-            // entityTypeBuilder.HasKey(x => new { x.Series, x.Number });
+            modelBuilder.ApplyConfiguration(new InactivePassportsConfiguration());
         }
     }
 }
