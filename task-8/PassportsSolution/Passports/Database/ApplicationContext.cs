@@ -6,7 +6,7 @@ namespace Passports.Database
 {
     public class ApplicationContext : DbContext
     {
-        public DbSet<Passport> inactivepassports { get; set; } = null!;
+        public DbSet<Passport> InactivePassports { get; set; }
 
         public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options)
         {

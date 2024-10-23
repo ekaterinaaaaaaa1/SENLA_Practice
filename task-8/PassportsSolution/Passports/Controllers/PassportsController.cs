@@ -18,7 +18,7 @@ namespace Passports.Controllers
         [HttpGet]
         public IActionResult GetPassport(int id)
         {
-            Passport? passport = _applicationContext.inactivepassports.Find(id);
+            Passport? passport = _applicationContext.InactivePassports.Find(id);
 
             if (passport == null)
             {

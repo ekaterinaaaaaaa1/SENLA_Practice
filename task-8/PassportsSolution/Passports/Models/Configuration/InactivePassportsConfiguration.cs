@@ -7,6 +7,7 @@ namespace Passports.Models.Configuration
     {
         public void Configure(EntityTypeBuilder<Passport> entityTypeBuilder)
         {
+            entityTypeBuilder.ToTable("inactivepassports");
             entityTypeBuilder.Property(x => x.Series).HasColumnType("char(4)");
             entityTypeBuilder.Property(x => x.Number).HasColumnType("char(6)");
             entityTypeBuilder.Property(x => x.Series).HasColumnName("passp_series");
