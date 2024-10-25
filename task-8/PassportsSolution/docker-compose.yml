@@ -1,0 +1,13 @@
+version: '3.9'
+services:
+  postgres:
+    image: postgres:15.8
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "p2658"
+      POSTGRES_DB: "passports_db"
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./data://passportsdata
+    ports:
+      - "5433:5432"
