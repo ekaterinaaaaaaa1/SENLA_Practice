@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using Passports.Database;
 using Passports.Models;
+using Passports.Services.Interfaces;
 
 namespace Passports.Controllers
 {
@@ -8,18 +8,18 @@ namespace Passports.Controllers
     [Route("[controller]")]
     public class PassportsController : ControllerBase
     {
-        private readonly ApplicationContext _applicationContext;
+        private readonly IDBService _dbService;
 
-        public PassportsController(ApplicationContext applicationContext)
+        public PassportsController(IDBService dbService)
         {
-            _applicationContext = applicationContext;
+            _dbService = dbService;
         }
 
         [HttpGet]
-        public IActionResult GetPassport(int id)
+        public IActionResult GetPassport(short series, int number)
         {
-            Passport? passport = _applicationContext.InactivePassports.Find(id);
-
+            Passport? passport = _dbService.GetPassport(series, number);
+            
             if (passport == null)
             {
                 return NotFound();

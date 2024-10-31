@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Passports.Database;
+using Passports.Services;
+using Passports.Services.Interfaces;
 
 namespace Passports
 {
@@ -16,6 +18,7 @@ namespace Passports
         {
             string? connection = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<ApplicationContext>(options => options.UseNpgsql(connection));
+            services.AddScoped<IDBService, PostgresDBService>();
             services.AddControllers();
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
