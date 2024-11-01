@@ -1,3 +1,5 @@
+using Passports.Converter;
+
 namespace Passports
 {
     public class Program
@@ -13,6 +15,12 @@ namespace Passports
 
             startup.Configure(app, app.Environment);
             app.Run();
+
+            HostApplicationBuilder hostBuilder = Host.CreateApplicationBuilder(args);
+            hostBuilder.Services.AddHostedService<DataConverterService>();
+
+            IHost host = builder.Build();
+            host.Run();
         }
     }
 }
