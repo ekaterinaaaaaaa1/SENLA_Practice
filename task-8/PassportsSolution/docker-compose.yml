@@ -1,0 +1,20 @@
+version: '3.9'
+services:
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Development"
+      ConnectionStrings__DefaultConnection: "Server=postgres;Database=passports_db;Username=postgres;Password=p2658"
+  postgres:
+    image: postgres:15.8
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "p2658"
+      POSTGRES_DB: "passports_db"
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./data://passportsdata
+    ports:
+      - "5433:5432"
