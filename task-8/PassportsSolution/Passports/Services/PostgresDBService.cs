@@ -20,30 +20,38 @@ namespace Passports.Services
             return _context.InactivePassports.Find(series, number);
         }
 
-        public void Copy()
+        public async Task Copy()
         {
-            using StreamReader streamReader = new StreamReader(_path);
-
-            string? line = streamReader.ReadLine();
-            while ((line = streamReader.ReadLine()) != null)
+            try
             {
-                Passport? passport = CsvParserService.Parse(line);
+                using StreamReader streamReader = new StreamReader(_path);
 
-                if (passport != null)
+                string? line = streamReader.ReadLine();
+                while ((line = streamReader.ReadLine()) != null)
                 {
-                    Passport? existingPassport = _context.InactivePassports.Find(passport.Series, passport.Number);
-                    if (existingPassport != null)
-                    {
-                        existingPassport.IsActive = false;
-                    }
-                    else
-                    {
-                        _context.InactivePassports.Add(passport);
-                    }
-                }
-            }
+                    Passport? passport = CsvParserService.Parse(line);
 
-            _context.SaveChanges();
+                    if (passport != null)
+                    {
+                        Passport? existingPassport = _context.InactivePassports.Find(passport.Series, passport.Number);
+                        if (existingPassport != null)
+                        {
+                            existingPassport.IsActive = false;
+                        }
+                        else
+                        {
+                            _context.InactivePassports.Add(passport);
+                        }
+                    }
+                    await Task.Delay(60000);
+                }
+
+                _context.SaveChanges();
+            }
+            catch (FileNotFoundException e)
+            {
+                Console.WriteLine(e.Message);
+            }
         }
     }
 }

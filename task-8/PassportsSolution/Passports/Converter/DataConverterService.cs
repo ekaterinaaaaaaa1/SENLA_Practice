@@ -15,7 +15,7 @@ namespace Passports.Converter
 
             // await context.Database.EnsureCreatedAsync(stoppingToken);
 
-            context.Copy();
+            await context.Copy();
 
             await Task.CompletedTask;
         }
