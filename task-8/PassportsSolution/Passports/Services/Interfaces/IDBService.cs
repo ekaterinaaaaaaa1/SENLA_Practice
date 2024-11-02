@@ -6,6 +6,6 @@ namespace Passports.Services.Interfaces
     {
         public Passport? GetPassport(short series, int number);
 
-        public Task Copy();
+        public void Copy();
     }
 }

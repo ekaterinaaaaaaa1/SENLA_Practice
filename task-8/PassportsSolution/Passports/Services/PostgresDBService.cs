@@ -20,7 +20,7 @@ namespace Passports.Services
             return _context.InactivePassports.Find(series, number);
         }
 
-        public async Task Copy()
+        public void Copy()
         {
             try
             {
@@ -43,7 +43,6 @@ namespace Passports.Services
                             _context.InactivePassports.Add(passport);
                         }
                     }
-                    await Task.Delay(60000);
                 }
 
                 _context.SaveChanges();
