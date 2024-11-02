@@ -1,6 +1,7 @@
 ﻿using Passports.Database;
 using Passports.Models;
 using Passports.Services;
+using Passports.Services.Interfaces;
 using System.Diagnostics;
 
 namespace Passports.Converter
@@ -10,7 +11,7 @@ namespace Passports.Converter
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             using var scope = serviceScopeFactory.CreateScope();
-            var context = scope.ServiceProvider.GetRequiredService<PostgresDBService>();
+            var context = scope.ServiceProvider.GetRequiredService<IDBService>();
 
             // await context.Database.EnsureCreatedAsync(stoppingToken);
 
