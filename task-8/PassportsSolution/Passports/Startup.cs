@@ -21,7 +21,7 @@ namespace Passports
             services.AddDbContext<ApplicationContext>(options => options.UseNpgsql(connection));
             services.AddScoped<IDBService, PostgresDBService>();
             services.AddSingleton(c => Configuration);
-           // services.AddHostedService<DataConverterService>();
+            services.AddHostedService<DataConverterService>();
             services.AddControllers();
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();

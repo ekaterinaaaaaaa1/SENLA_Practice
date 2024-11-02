@@ -7,6 +7,9 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: "Development"
       ConnectionStrings__DefaultConnection: "Server=postgres;Database=passports_db;Username=postgres;Password=p2658"
+    depends_on:
+      - postgres
+    restart: on-failure
   postgres:
     image: postgres:15.8
     environment:

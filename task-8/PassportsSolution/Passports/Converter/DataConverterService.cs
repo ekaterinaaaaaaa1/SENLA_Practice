@@ -1,24 +1,24 @@
-﻿using Npgsql;
+﻿using Passports.Database;
 using Passports.Models;
 using Passports.Services;
 using System.Diagnostics;
 
 namespace Passports.Converter
 {
-    public class DataConverterService : BackgroundService
+    public class DataConverterService(IServiceScopeFactory serviceScopeFactory, IConfiguration configuration) : BackgroundService
     {
-        private string _path = @"Converter\data1\Data1.csv";
-        private readonly IConfiguration _configuration;
-
-        public DataConverterService(IConfiguration configuration)
-        {
-            _configuration = configuration;
-        }
+        private string _path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Converter", "data1", "Data1.csv");
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            using var scope = serviceScopeFactory.CreateScope();
+            using var context = scope.ServiceProvider.GetRequiredService<ApplicationContext>();
+            
+            await context.Database.EnsureCreatedAsync(stoppingToken);
+
             using StreamReader streamReader = new StreamReader(_path);
             Debug.WriteLine("ExecuteAsync is working");
+            Console.WriteLine("ExecuteAsync is working");
 
             string? line = streamReader.ReadLine();
             while ((line = streamReader.ReadLine()) != null)
@@ -27,28 +27,26 @@ namespace Passports.Converter
 
                 if (passport != null)
                 {
-                    using (NpgsqlConnection connection = new NpgsqlConnection(_configuration.GetConnectionString("DefaultConnection")))
+                    Passport? existingPassport = context.InactivePassports.Find(passport.Series, passport.Number);
+                    if (existingPassport != null)
                     {
-                        connection.Open();
-
-                        using NpgsqlCommand command = new NpgsqlCommand("""
-                            INSERT INTO inactivepassports (PASSP_SERIES, PASSP_NUMBER, ACTIVE)
-                            VALUES (@s, @n, @a)
-                            ON CONFLICT (PASSP_SERIES, PASSP_NUMBER)
-                            DO UPDATE SET PASSP_SERIES = EXCLUDED.PASSP_SERIES, PASSP_NUMBER = EXCLUDED.PASSP_NUMBER;
-                            """, connection);
-                        command.Parameters.AddWithValue("s", passport.Series);
-                        command.Parameters.AddWithValue("n", passport.Number);
-                        command.Parameters.AddWithValue("a", passport.IsActive);
-                        command.ExecuteNonQuery();
+                        existingPassport.IsActive = false;
+                        context.InactivePassports.Update(existingPassport);
                     }
+                    else
+                    {
+                        context.InactivePassports.Add(passport);
+                    }
+                    context.SaveChanges();
                 }
             }
 
-            while (!stoppingToken.IsCancellationRequested)
+            //context.SaveChanges();
+
+            /*while (!stoppingToken.IsCancellationRequested)
             {
                 await Task.Delay(200, stoppingToken);
-            }
+            }*/
 
             await Task.CompletedTask;
         }

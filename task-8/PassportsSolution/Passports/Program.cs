@@ -1,4 +1,5 @@
 using Passports.Converter;
+using Microsoft.Extensions.Hosting.Systemd;
 
 namespace Passports
 {
@@ -16,11 +17,12 @@ namespace Passports
             startup.Configure(app, app.Environment);
             app.Run();
 
-            HostApplicationBuilder hostBuilder = Host.CreateApplicationBuilder(args);
+            /*HostApplicationBuilder hostBuilder = Host.CreateApplicationBuilder(args);
+            hostBuilder.Services.AddSystemd();
             hostBuilder.Services.AddHostedService<DataConverterService>();
 
-            IHost host = builder.Build();
-            host.Run();
+            IHost host = hostBuilder.Build();
+            host.RunAsync();*/
         }
     }
 }
