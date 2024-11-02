@@ -9,7 +9,7 @@ services:
       ConnectionStrings__DefaultConnection: "Server=postgres;Database=passports_db;Username=postgres;Password=p2658"
     depends_on:
       - postgres
-    restart: on-failure
+    restart: always
   postgres:
     image: postgres:15.8
     environment:
