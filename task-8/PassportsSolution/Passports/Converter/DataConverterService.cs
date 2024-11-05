@@ -1,27 +1,56 @@
-﻿using Passports.Database;
-using Passports.Models;
-using Passports.Services;
-using Passports.Services.Interfaces;
-using System.Diagnostics;
+﻿using Passports.Services.Interfaces;
+using Passports.Exceptions;
 
 namespace Passports.Converter
 {
     public class DataConverterService(IServiceScopeFactory serviceScopeFactory, IConfiguration configuration) : BackgroundService
     {
+        private const int GMT_OFFSET = 3;
+        private string _sectionName = "ReadingCsvTime";
+
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             using var scope = serviceScopeFactory.CreateScope();
             var context = scope.ServiceProvider.GetRequiredService<IDBService>();
+            double readingCsvTotalMinutes = -1;
 
-            // await context.Database.EnsureCreatedAsync(stoppingToken);
-
-            while (!stoppingToken.IsCancellationRequested)
+            try
             {
-                context.Copy();
-                await Task.Delay(60000);
-            }
+                string? time = configuration.GetSection(_sectionName).Value;
+                if (!string.IsNullOrWhiteSpace(time))
+                {
+                    bool parse = TimeSpan.TryParse(time, out TimeSpan readingCsvTime);
+                    if (!parse)
+                    {
+                        throw new ParseException();
+                    }
+                    readingCsvTotalMinutes = Math.Floor(readingCsvTime.TotalMinutes);
+                }
+                else
+                {
+                    throw new EmptyConfigurationSectionException(_sectionName);
+                }
 
-            await Task.CompletedTask;
+                while (!stoppingToken.IsCancellationRequested)
+                {
+                    TimeSpan timeNow = DateTime.Now.AddHours(GMT_OFFSET).TimeOfDay;
+
+                    if (Math.Floor(timeNow.TotalMinutes) == readingCsvTotalMinutes)
+                    {
+                        context.Copy();
+                    }
+
+                    await Task.Delay(60000);
+                }
+            }
+            catch (ParseException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            catch (EmptyConfigurationSectionException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
     }
 }
