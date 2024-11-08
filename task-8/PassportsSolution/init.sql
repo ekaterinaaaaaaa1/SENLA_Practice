@@ -12,6 +12,6 @@ CREATE TEMP TABLE temp_inactivepassports (
 
 COPY temp_inactivepassports (PASSP_SERIES, PASSP_NUMBER) FROM '//passportsdata//Data.csv' DELIMITER ',' CSV HEADER;
 
-INSERT INTO inactivepassports SELECT CAST(PASSP_SERIES AS smallint), CAST(PASSP_NUMBER AS integer), FALSE FROM temp_inactivepassports WHERE PASSP_SERIES ~ '[0-9]{4}' AND PASSP_NUMBER ~ '[0-9]{6}';
+INSERT INTO inactivepassports SELECT CAST(PASSP_SERIES AS smallint), CAST(PASSP_NUMBER AS integer), FALSE FROM temp_inactivepassports WHERE PASSP_SERIES ~ '^[0-9]{4}$' AND PASSP_NUMBER ~ '^[0-9]{6}$';
 
 DROP TABLE temp_inactivepassports;

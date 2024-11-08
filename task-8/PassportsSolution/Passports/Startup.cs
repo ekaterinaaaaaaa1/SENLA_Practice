@@ -20,7 +20,6 @@ namespace Passports
             string? connection = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<ApplicationContext>(options => options.UseNpgsql(connection));
             services.AddScoped<IDBService, PostgresDBService>();
-            services.AddSingleton(c => Configuration);
             services.AddHostedService<DataConverterService>();
             services.AddControllers();
             services.AddEndpointsApiExplorer();

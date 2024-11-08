@@ -1,4 +1,5 @@
-﻿using Passports.Database;
+﻿using Passports.Converter;
+using Passports.Database;
 using Passports.Models;
 using Passports.Services.Interfaces;
 
@@ -7,12 +8,15 @@ namespace Passports.Services
     public class PostgresDBService : IDBService
     {
         private readonly ApplicationContext _context;
+        private readonly IConfiguration _configuration;
 
-        private string _path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Converter", "data1", "Data1.csv");
+        private static string _directory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Converter", "data1");
+        private static string _csvFile = Path.Combine(_directory, "Data1.csv");
 
-        public PostgresDBService(ApplicationContext context)
+        public PostgresDBService(ApplicationContext context, IConfiguration configuration)
         {
             _context = context;
+            _configuration = configuration;
         }
 
         public Passport? GetPassport(short series, int number)
@@ -20,11 +24,14 @@ namespace Passports.Services
             return _context.InactivePassports.Find(series, number);
         }
 
-        public void Copy()
+        public async void Copy()
         {
             try
             {
-                using StreamReader streamReader = new StreamReader(_path);
+                YandexDiskService yandexDiskService = new YandexDiskService(_configuration);
+                await yandexDiskService.DownloadFile(_directory);
+
+                using StreamReader streamReader = new StreamReader(_csvFile);
 
                 string? line = streamReader.ReadLine();
                 while ((line = streamReader.ReadLine()) != null)

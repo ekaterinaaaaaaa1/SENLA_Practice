@@ -6,7 +6,7 @@ namespace Passports.Converter
     public class DataConverterService(IServiceScopeFactory serviceScopeFactory, IConfiguration configuration) : BackgroundService
     {
         private const int GMT_OFFSET = 3;
-        private string _sectionName = "ReadingCsvTime";
+        private readonly string _sectionName = "ReadingCsvTime";
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
@@ -35,7 +35,7 @@ namespace Passports.Converter
                 {
                     TimeSpan timeNow = DateTime.Now.AddHours(GMT_OFFSET).TimeOfDay;
 
-                    if (Math.Floor(timeNow.TotalMinutes) == readingCsvTotalMinutes)
+                    if (Convert.ToInt32(Math.Floor(timeNow.TotalMinutes)) == Convert.ToInt32(readingCsvTotalMinutes))
                     {
                         context.Copy();
                     }
