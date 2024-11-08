@@ -1,4 +1,5 @@
 ﻿using Passports.Exceptions;
+using System.IO.Compression;
 using YandexDisk.Client.Clients;
 using YandexDisk.Client.Http;
 using YandexDisk.Client.Protocol;
@@ -34,9 +35,11 @@ namespace Passports.Converter
 
         public async Task DownloadFile(string destinationDirectory)
         {
-            if (!Directory.Exists(destinationDirectory))
+            string zipDirectory = Path.Combine(destinationDirectory, "zip");
+            
+            if (!Directory.Exists(zipDirectory))
             {
-                Directory.CreateDirectory(destinationDirectory);
+                Directory.CreateDirectory(zipDirectory);
             }
 
             try
@@ -45,9 +48,12 @@ namespace Passports.Converter
                 {
                     throw new YandexDiskException();
                 }
+
                 Resource data1 = _data1Folder.Embedded.Items[0];
-                string name = Path.Combine(destinationDirectory, data1.Name);
-                await _api.Files.DownloadFileAsync(data1.Path, name);
+                string zipFile = Path.Combine(zipDirectory, data1.Name);
+                await _api.Files.DownloadFileAsync(data1.Path, zipFile);
+
+                ZipFile.ExtractToDirectory(zipFile, destinationDirectory);
             }
             catch (YandexDiskException)
             {
