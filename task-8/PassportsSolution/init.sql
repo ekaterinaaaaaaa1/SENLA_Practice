@@ -1,17 +1,20 @@
+CREATE TABLE IF NOT EXISTS "__EFMigrationsHistory" (
+    "MigrationId" character varying(150) NOT NULL,
+    "ProductVersion" character varying(32) NOT NULL,
+    CONSTRAINT "PK___EFMigrationsHistory" PRIMARY KEY ("MigrationId")
+);
+
+START TRANSACTION;
+
 CREATE TABLE inactivepassports (
-    PASSP_SERIES smallint,
-    PASSP_NUMBER integer,
-    ACTIVE boolean,
-    PRIMARY KEY (PASSP_SERIES, PASSP_NUMBER)
+    passp_series smallint NOT NULL,
+    passp_number integer NOT NULL,
+    active boolean NOT NULL,
+    CONSTRAINT "PK_inactivepassports" PRIMARY KEY (passp_series, passp_number)
 );
 
-CREATE TEMP TABLE temp_inactivepassports (
-    PASSP_SERIES char(4),
-    PASSP_NUMBER char(6)
-);
+INSERT INTO "__EFMigrationsHistory" ("MigrationId", "ProductVersion")
+VALUES ('20241111125336_InitialCreate', '8.0.10');
 
-COPY temp_inactivepassports (PASSP_SERIES, PASSP_NUMBER) FROM '//passportsdata//Data.csv' DELIMITER ',' CSV HEADER;
+COMMIT;
 
-INSERT INTO inactivepassports SELECT CAST(PASSP_SERIES AS smallint), CAST(PASSP_NUMBER AS integer), FALSE FROM temp_inactivepassports WHERE PASSP_SERIES ~ '^[0-9]{4}$' AND PASSP_NUMBER ~ '^[0-9]{6}$';
-
-DROP TABLE temp_inactivepassports;
