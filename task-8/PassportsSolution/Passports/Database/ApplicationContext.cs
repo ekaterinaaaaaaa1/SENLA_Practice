@@ -7,6 +7,7 @@ namespace Passports.Database
     public class ApplicationContext : DbContext
     {
         public DbSet<Passport> InactivePassports { get; set; }
+        public DbSet<PassportHistory> PassportHistory { get; set; }
 
         public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options)
         {
@@ -15,6 +16,7 @@ namespace Passports.Database
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new InactivePassportsConfiguration());
+            modelBuilder.ApplyConfiguration(new PassportHistoryConfiguration());
         }
     }
 }
