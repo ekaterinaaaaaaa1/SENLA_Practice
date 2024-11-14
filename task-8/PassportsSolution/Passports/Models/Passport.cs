@@ -5,5 +5,7 @@
         public short Series { get; set; }
         public int Number { get; set; }
         public bool IsActive { get; set; }
+
+        public ICollection<PassportHistory> PassportHistories { get; set; } = null!;
     }
 }
