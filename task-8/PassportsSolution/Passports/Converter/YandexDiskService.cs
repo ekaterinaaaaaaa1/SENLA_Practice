@@ -36,11 +36,13 @@ namespace Passports.Converter
         public async Task DownloadFileAsync(string destinationDirectory)
         {
             string zipDirectory = Path.Combine(destinationDirectory, "zip");
-            
-            if (!Directory.Exists(zipDirectory))
+
+            if (Directory.Exists(destinationDirectory))
             {
-                Directory.CreateDirectory(zipDirectory);
+                Directory.Delete(destinationDirectory, true);
             }
+
+            Directory.CreateDirectory(zipDirectory);
 
             try
             {

@@ -12,7 +12,7 @@ using Passports.Database;
 namespace Passports.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20241114091013_InitialCreate")]
+    [Migration("20241114171201_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
