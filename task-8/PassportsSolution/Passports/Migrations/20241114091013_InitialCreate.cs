@@ -34,7 +34,7 @@ namespace Passports.Migrations
                     passp_series = table.Column<short>(type: "smallint", nullable: false),
                     passp_number = table.Column<int>(type: "integer", nullable: false),
                     active_start = table.Column<DateTime>(type: "date", nullable: false),
-                    active_end = table.Column<DateTime>(type: "date", nullable: false)
+                    active_end = table.Column<DateTime>(type: "date", nullable: true)
                 },
                 constraints: table =>
                 {

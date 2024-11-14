@@ -33,7 +33,7 @@ namespace Passports.Converter
             }
         }
 
-        public async Task DownloadFile(string destinationDirectory)
+        public async Task DownloadFileAsync(string destinationDirectory)
         {
             string zipDirectory = Path.Combine(destinationDirectory, "zip");
             

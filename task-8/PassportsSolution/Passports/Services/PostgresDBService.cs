@@ -29,7 +29,7 @@ namespace Passports.Services
             try
             {
                 YandexDiskService yandexDiskService = new YandexDiskService(_configuration);
-                await yandexDiskService.DownloadFile(_directory);
+                await yandexDiskService.DownloadFileAsync(_directory);
 
                 using StreamReader streamReader = new StreamReader(_csvFile);
 
@@ -41,9 +41,11 @@ namespace Passports.Services
                     if (passport != null)
                     {
                         Passport? existingPassport = _context.InactivePassports.Find(passport.Series, passport.Number);
-                        if (existingPassport != null)
+                        if (existingPassport != null && existingPassport.IsActive)
                         {
                             existingPassport.IsActive = false;
+                            PassportHistory passportHistory = _context.PassportHistory.Last(p => (p.PassportSeries == passport.Series) && (p.PassportNumber == passport.Number));
+                            passportHistory.ActiveEnd = DateTime.Now;
                         }
                         else
                         {

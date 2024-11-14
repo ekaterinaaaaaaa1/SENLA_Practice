@@ -18,7 +18,7 @@ CREATE TABLE passporthistory (
     passp_series smallint NOT NULL,
     passp_number integer NOT NULL,
     active_start date NOT NULL,
-    active_end date NOT NULL,
+    active_end date,
     CONSTRAINT "PK_passporthistory" PRIMARY KEY (id),
     CONSTRAINT "FK_passporthistory_inactivepassports_passp_series_passp_number" FOREIGN KEY (passp_series, passp_number) REFERENCES inactivepassports (passp_series, passp_number) ON DELETE CASCADE
 );
@@ -26,7 +26,7 @@ CREATE TABLE passporthistory (
 CREATE INDEX "IX_passporthistory_passp_series_passp_number" ON passporthistory (passp_series, passp_number);
 
 INSERT INTO "__EFMigrationsHistory" ("MigrationId", "ProductVersion")
-VALUES ('20241113171111_InitialCreate', '8.0.10');
+VALUES ('20241114091013_InitialCreate', '8.0.10');
 
 COMMIT;
 

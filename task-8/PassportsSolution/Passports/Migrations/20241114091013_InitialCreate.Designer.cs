@@ -12,7 +12,7 @@ using Passports.Database;
 namespace Passports.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20241113171111_InitialCreate")]
+    [Migration("20241114091013_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -53,7 +53,7 @@ namespace Passports.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("ActiveEnd")
+                    b.Property<DateTime?>("ActiveEnd")
                         .HasColumnType("date")
                         .HasColumnName("active_end");
 
@@ -61,17 +61,17 @@ namespace Passports.Migrations
                         .HasColumnType("date")
                         .HasColumnName("active_start");
 
-                    b.Property<int>("PassportsNumber")
+                    b.Property<int>("PassportNumber")
                         .HasColumnType("integer")
                         .HasColumnName("passp_number");
 
-                    b.Property<short>("PassportsSeries")
+                    b.Property<short>("PassportSeries")
                         .HasColumnType("smallint")
                         .HasColumnName("passp_series");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PassportsSeries", "PassportsNumber");
+                    b.HasIndex("PassportSeries", "PassportNumber");
 
                     b.ToTable("passporthistory", (string)null);
                 });
@@ -80,7 +80,7 @@ namespace Passports.Migrations
                 {
                     b.HasOne("Passports.Models.Passport", "Passport")
                         .WithMany("PassportHistories")
-                        .HasForeignKey("PassportsSeries", "PassportsNumber")
+                        .HasForeignKey("PassportSeries", "PassportNumber")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
