@@ -36,7 +36,6 @@ namespace Passports.Services
                 List<Passport> csvPassports = new List<Passport>();
 
                 string? line = streamReader.ReadLine();
-                
                 while ((line = streamReader.ReadLine()) != null)
                 {
                     Passport? passport = CsvParserService.Parse(line);
@@ -47,23 +46,37 @@ namespace Passports.Services
                 }
 
                 var activePassports = _context.InactivePassports.ToList().Except(csvPassports);
-                Console.WriteLine(activePassports);
                 if (activePassports != null)
                 {
                     foreach (Passport passport in activePassports)
                     {
+                        passport.IsActive = true;
+                        
                         PassportHistory passportHistory = new PassportHistory()
                         {
-                            Id = _context.PassportHistory.Count(),
                             PassportNumber = passport.Number,
                             PassportSeries = passport.Series,
                             Passport = passport,
                             ActiveStart = DateTime.Now
                         };
-
+                        
                         _context.PassportHistory.Add(passportHistory);
                     }
-                    Console.WriteLine("count of active: {0}", activePassports.Count());
+
+                    _context.SaveChanges();
+                }
+
+                var fromActiveToInactivePassports = _context.InactivePassports.ToList().Where(p => p.IsActive == true).Intersect(csvPassports);
+                if (fromActiveToInactivePassports != null)
+                {
+                    foreach (Passport passport in fromActiveToInactivePassports)
+                    {
+                        passport.IsActive = false;
+
+                        PassportHistory passportHistory = _context.PassportHistory.OrderBy(p => p.Id).Last(p => (p.PassportSeries == passport.Series) && (p.PassportNumber == passport.Number));
+                        passportHistory.ActiveEnd = DateTime.Now;
+                    }
+
                     _context.SaveChanges();
                 }
 
@@ -72,19 +85,9 @@ namespace Passports.Services
                 {
                     foreach (Passport passport in inactivePassports)
                     {
-                        Passport? existingPassport = _context.InactivePassports.Find(passport.Series, passport.Number);
-                        if (existingPassport != null)
-                        {
-                            existingPassport.IsActive = false;
-                            PassportHistory passportHistory = _context.PassportHistory.Last(p => (p.PassportSeries == passport.Series) && (p.PassportNumber == passport.Number));
-                            passportHistory.ActiveEnd = DateTime.Now;
-                        }
-                        else
-                        {
-                            _context.InactivePassports.Add(passport);
-                        }
+                        _context.InactivePassports.Add(passport);
                     }
-                    Console.WriteLine("count of inactive: {0}", inactivePassports.Count());
+
                     _context.SaveChanges();
                 }
             }

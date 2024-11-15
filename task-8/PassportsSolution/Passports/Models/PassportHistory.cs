@@ -4,6 +4,7 @@ namespace Passports.Models
 {
     public class PassportHistory
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public short PassportSeries { get; set; }
         public int PassportNumber { get; set; }

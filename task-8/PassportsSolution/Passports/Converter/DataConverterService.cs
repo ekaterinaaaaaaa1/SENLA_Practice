@@ -41,7 +41,7 @@ namespace Passports.Converter
                     }*/
 
                     context.Copy();
-                    await Task.Delay(180000);
+                    await Task.Delay(150000);
                     //await Task.Delay(60000);
                 }
             }
