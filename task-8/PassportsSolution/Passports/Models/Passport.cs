@@ -1,6 +1,6 @@
 ﻿namespace Passports.Models
 {
-    public class Passport
+    public class Passport : IEqualityComparer<Passport>
     {
         public short Series { get; set; }
         public int Number { get; set; }
@@ -8,19 +8,19 @@
 
         public ICollection<PassportHistory> PassportHistories { get; set; } = null!;
 
-        public override bool Equals(object? obj)
+        public bool Equals(Passport? x, Passport? y)
         {
-            if (obj is Passport passport)
+            if (x != null && y != null)
             {
-                return passport.Series == Series && passport.Number == Number;
+                return x.Series == y.Series && x.Number == y.Number;
             }
 
             return false;
         }
 
-        public override int GetHashCode()
+        public int GetHashCode(Passport obj)
         {
-            return HashCode.Combine(Series, Number);
+            return obj != null ? HashCode.Combine(Series, Number) : 0;
         }
     }
 }

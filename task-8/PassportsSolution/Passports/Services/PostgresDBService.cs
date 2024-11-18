@@ -60,7 +60,7 @@ namespace Passports.Services
 
         private void AddActivePassports(List<Passport> inactivePassportsFromDb, List<Passport> csvPassports)
         {
-            var activePassports = inactivePassportsFromDb.Except(csvPassports);
+            var activePassports = inactivePassportsFromDb.Except(csvPassports, new Passport());
 
             if (activePassports.Any())
             {
@@ -83,7 +83,7 @@ namespace Passports.Services
 
         private void AddInactivePassports(List<Passport> inactivePassportsFromDb, List<Passport> csvPassports)
         {
-            var fromActiveToInactivePassports = inactivePassportsFromDb.Where(p => p.IsActive).Intersect(csvPassports);
+            var fromActiveToInactivePassports = inactivePassportsFromDb.Where(p => p.IsActive).Intersect(csvPassports, new Passport());
 
             if (fromActiveToInactivePassports.Any())
             {
@@ -99,7 +99,7 @@ namespace Passports.Services
 
         private void AddFromActiveToInactivePassports(List<Passport> inactivePassportsFromDb, List<Passport> csvPassports)
         {
-            var inactivePassports = csvPassports.Except(inactivePassportsFromDb.ToList());
+            var inactivePassports = csvPassports.Except(inactivePassportsFromDb, new Passport());
 
             if (inactivePassports.Any())
             {

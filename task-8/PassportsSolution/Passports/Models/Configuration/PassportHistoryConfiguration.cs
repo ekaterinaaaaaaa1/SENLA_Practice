@@ -8,7 +8,6 @@ namespace Passports.Models.Configuration
         public void Configure(EntityTypeBuilder<PassportHistory> entityTypeBuilder)
         {
             entityTypeBuilder.ToTable("passporthistory");
-            //entityTypeBuilder.Property(x => x.Id).HasColumnType("integer");
             entityTypeBuilder.Property(x => x.PassportSeries).HasColumnType("smallint");
             entityTypeBuilder.Property(x => x.PassportNumber).HasColumnType("integer");
             entityTypeBuilder.Property(x => x.ActiveStart).HasColumnType("date");
