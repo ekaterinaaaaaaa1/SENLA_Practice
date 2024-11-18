@@ -34,9 +34,10 @@ namespace Passports.Services
                 using StreamReader streamReader = new StreamReader(_csvFile);
 
                 List<Passport> csvPassports = new List<Passport>();
+                List<Passport> inactivePassportsFromDb = _context.InactivePassports.ToList();
 
-                string? line = streamReader.ReadLine();
-                while ((line = streamReader.ReadLine()) != null)
+                string? line = await streamReader.ReadLineAsync();
+                while ((line = await streamReader.ReadLineAsync()) != null)
                 {
                     Passport? passport = CsvParserService.Parse(line);
                     if (passport != null)
@@ -45,55 +46,67 @@ namespace Passports.Services
                     }
                 }
 
-                var activePassports = _context.InactivePassports.ToList().Except(csvPassports);
-                if (activePassports != null)
-                {
-                    foreach (Passport passport in activePassports)
-                    {
-                        passport.IsActive = true;
-                        
-                        PassportHistory passportHistory = new PassportHistory()
-                        {
-                            PassportNumber = passport.Number,
-                            PassportSeries = passport.Series,
-                            Passport = passport,
-                            ActiveStart = DateTime.Now
-                        };
-                        
-                        _context.PassportHistory.Add(passportHistory);
-                    }
+                AddActivePassports(inactivePassportsFromDb, csvPassports);
+                AddInactivePassports(inactivePassportsFromDb, csvPassports);
+                AddFromActiveToInactivePassports(inactivePassportsFromDb, csvPassports);
 
-                    _context.SaveChanges();
-                }
-
-                var fromActiveToInactivePassports = _context.InactivePassports.ToList().Where(p => p.IsActive == true).Intersect(csvPassports);
-                if (fromActiveToInactivePassports != null)
-                {
-                    foreach (Passport passport in fromActiveToInactivePassports)
-                    {
-                        passport.IsActive = false;
-
-                        PassportHistory passportHistory = _context.PassportHistory.OrderBy(p => p.Id).Last(p => (p.PassportSeries == passport.Series) && (p.PassportNumber == passport.Number));
-                        passportHistory.ActiveEnd = DateTime.Now;
-                    }
-
-                    _context.SaveChanges();
-                }
-
-                var inactivePassports = csvPassports.Except(_context.InactivePassports.ToList());
-                if (inactivePassports != null)
-                {
-                    foreach (Passport passport in inactivePassports)
-                    {
-                        _context.InactivePassports.Add(passport);
-                    }
-
-                    _context.SaveChanges();
-                }
+                await _context.SaveChangesAsync();
             }
             catch (FileNotFoundException e)
             {
                 Console.WriteLine(e.Message);
+            }
+        }
+
+        private void AddActivePassports(List<Passport> inactivePassportsFromDb, List<Passport> csvPassports)
+        {
+            var activePassports = inactivePassportsFromDb.Except(csvPassports);
+
+            if (activePassports.Any())
+            {
+                foreach (Passport passport in activePassports)
+                {
+                    passport.IsActive = true;
+
+                    PassportHistory passportHistory = new PassportHistory()
+                    {
+                        PassportNumber = passport.Number,
+                        PassportSeries = passport.Series,
+                        Passport = passport,
+                        ActiveStart = DateTime.Now
+                    };
+
+                    _context.PassportHistory.Add(passportHistory);
+                }
+            }
+        }
+
+        private void AddInactivePassports(List<Passport> inactivePassportsFromDb, List<Passport> csvPassports)
+        {
+            var fromActiveToInactivePassports = inactivePassportsFromDb.Where(p => p.IsActive).Intersect(csvPassports);
+
+            if (fromActiveToInactivePassports.Any())
+            {
+                foreach (Passport passport in fromActiveToInactivePassports)
+                {
+                    passport.IsActive = false;
+
+                    PassportHistory passportHistory = _context.PassportHistory.OrderBy(p => p.Id).Last(p => (p.PassportSeries == passport.Series) && (p.PassportNumber == passport.Number));
+                    passportHistory.ActiveEnd = DateTime.Now;
+                }
+            }
+        }
+
+        private void AddFromActiveToInactivePassports(List<Passport> inactivePassportsFromDb, List<Passport> csvPassports)
+        {
+            var inactivePassports = csvPassports.Except(inactivePassportsFromDb.ToList());
+
+            if (inactivePassports.Any())
+            {
+                foreach (Passport passport in inactivePassports)
+                {
+                    _context.InactivePassports.Add(passport);
+                }
             }
         }
     }
