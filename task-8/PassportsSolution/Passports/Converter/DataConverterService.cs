@@ -35,14 +35,14 @@ namespace Passports.Converter
                 {
                     TimeSpan timeNow = DateTime.Now.AddHours(GMT_OFFSET).TimeOfDay;
 
-                    /*if (Convert.ToInt32(Math.Floor(timeNow.TotalMinutes)) == Convert.ToInt32(readingCsvTotalMinutes))
+                    if (Convert.ToInt32(Math.Floor(timeNow.TotalMinutes)) == Convert.ToInt32(readingCsvTotalMinutes))
                     {
                         context.Copy();
-                    }*/
+                    }
 
-                    context.Copy();
-                    await Task.Delay(150000);
-                    //await Task.Delay(60000);
+                    // context.Copy();
+                    // await Task.Delay(600000);
+                    await Task.Delay(60000);
                 }
             }
             catch (ParseException ex)
