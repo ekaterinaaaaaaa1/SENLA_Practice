@@ -2,6 +2,7 @@
 using Passports.Converter;
 using Passports.Database;
 using Passports.Models;
+using Passports.Models.Extensions;
 using Passports.Services.Interfaces;
 
 namespace Passports.Services
@@ -51,11 +52,11 @@ namespace Passports.Services
                         csvPassports.Add(passport);
                     }
                 }
-
+                
                 AddActivePassports(inactivePassportsFromDb, csvPassports);
                 AddInactivePassports(inactivePassportsFromDb, csvPassports);
                 AddFromActiveToInactivePassports(inactivePassportsFromDb, csvPassports);
-
+                
                 await _context.BulkSaveChangesAsync();
             }
             catch (FileNotFoundException e)
@@ -66,7 +67,7 @@ namespace Passports.Services
 
         private void AddActivePassports(List<Passport> inactivePassportsFromDb, List<Passport> csvPassports)
         {
-            var activePassports = inactivePassportsFromDb.Except(csvPassports, new Passport());
+            var activePassports = inactivePassportsFromDb.Except(csvPassports).ToList();
 
             if (activePassports.Any())
             {
@@ -85,31 +86,25 @@ namespace Passports.Services
                     };
 
                     passportHistories.Add(passportHistory);
-                    //_context.PassportHistory.Add(passportHistory);
                 }
 
-                _context.BulkInsert(passportHistories);
+                BulkInsertExtension<PassportHistory>.BulkInsertByBatchesAsync(_context, passportHistories);
             }
         }
 
         private void AddInactivePassports(List<Passport> inactivePassportsFromDb, List<Passport> csvPassports)
         {
-            var inactivePassports = csvPassports.Except(inactivePassportsFromDb, new Passport());
-
-            _context.BulkInsert(inactivePassports);
-
-            /*if (inactivePassports.Any())
+            var inactivePassports = csvPassports.Except(inactivePassportsFromDb);
+            
+            if (inactivePassports.Any())
             {
-                foreach (Passport passport in inactivePassports)
-                {
-                    _context.InactivePassports.Add(passport);
-                }
-            }*/
+                BulkInsertExtension<Passport>.BulkInsertByBatchesAsync(_context, inactivePassports);
+            }
         }
 
         private void AddFromActiveToInactivePassports(List<Passport> inactivePassportsFromDb, List<Passport> csvPassports)
         {
-            var fromActiveToInactivePassports = inactivePassportsFromDb.Where(p => p.IsActive).Intersect(csvPassports, new Passport());
+            var fromActiveToInactivePassports = inactivePassportsFromDb.Where(p => p.IsActive).Intersect(csvPassports);
 
             if (fromActiveToInactivePassports.Any())
             {

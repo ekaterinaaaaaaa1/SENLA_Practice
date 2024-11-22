@@ -33,7 +33,7 @@ namespace Passports.Converter
 
                 while (!stoppingToken.IsCancellationRequested)
                 {
-                    TimeSpan timeNow = DateTime.Now.AddHours(GMT_OFFSET).TimeOfDay;
+                    TimeSpan timeNow = DateTime.Now.ToUniversalTime().AddHours(GMT_OFFSET).TimeOfDay;
 
                     if (Convert.ToInt32(Math.Floor(timeNow.TotalMinutes)) == Convert.ToInt32(readingCsvTotalMinutes))
                     {
