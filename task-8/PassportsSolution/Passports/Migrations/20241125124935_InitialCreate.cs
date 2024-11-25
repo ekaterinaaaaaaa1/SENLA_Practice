@@ -26,6 +26,19 @@ namespace Passports.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "inactiveussrpassports",
+                columns: table => new
+                {
+                    passp_series = table.Column<string>(type: "varchar(9)", nullable: false),
+                    passp_number = table.Column<int>(type: "integer", nullable: false),
+                    active = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_inactiveussrpassports", x => new { x.passp_series, x.passp_number });
+                });
+
+            migrationBuilder.CreateTable(
                 name: "passporthistory",
                 columns: table => new
                 {
@@ -47,9 +60,36 @@ namespace Passports.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "ussrpassporthistory",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    passp_series = table.Column<string>(type: "varchar(9)", nullable: false),
+                    passp_number = table.Column<int>(type: "integer", nullable: false),
+                    active_start = table.Column<DateTime>(type: "date", nullable: false),
+                    active_end = table.Column<DateTime>(type: "date", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ussrpassporthistory", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_ussrpassporthistory_inactiveussrpassports_passp_series_pass~",
+                        columns: x => new { x.passp_series, x.passp_number },
+                        principalTable: "inactiveussrpassports",
+                        principalColumns: new[] { "passp_series", "passp_number" },
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_passporthistory_passp_series_passp_number",
                 table: "passporthistory",
+                columns: new[] { "passp_series", "passp_number" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ussrpassporthistory_passp_series_passp_number",
+                table: "ussrpassporthistory",
                 columns: new[] { "passp_series", "passp_number" });
         }
 
@@ -60,7 +100,13 @@ namespace Passports.Migrations
                 name: "passporthistory");
 
             migrationBuilder.DropTable(
+                name: "ussrpassporthistory");
+
+            migrationBuilder.DropTable(
                 name: "inactivepassports");
+
+            migrationBuilder.DropTable(
+                name: "inactiveussrpassports");
         }
     }
 }

@@ -1,16 +1,16 @@
 ﻿namespace Passports.Models
 {
-    public class Passport
+    public class UssrPassport
     {
-        public short Series { get; set; }
+        public string Series { get; set; } = null!;
         public int Number { get; set; }
         public bool IsActive { get; set; }
 
-        public ICollection<PassportHistory> PassportHistories { get; set; } = null!;
+        public ICollection<UssrPassportHistory> UssrPassportHistories { get; set; } = null!;
 
         public override bool Equals(object? obj)
         {
-            if (obj is Passport passport)
+            if (obj is UssrPassport passport)
             {
                 return passport.Series == Series && passport.Number == Number;
             }
