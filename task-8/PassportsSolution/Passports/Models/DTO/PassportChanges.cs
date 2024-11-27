@@ -2,7 +2,8 @@
 {
     public class PassportChanges
     {
-        public DateTime ActiveStart { get; set; }
-        public DateTime? ActiveEnd { get; set; }
+        public DateOnly? Start { get; set; }
+        public DateOnly? End { get; set; }
+        public bool IsActive { get; set; }
     }
 }

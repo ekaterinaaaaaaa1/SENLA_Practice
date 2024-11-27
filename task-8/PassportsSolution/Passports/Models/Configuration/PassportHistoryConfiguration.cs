@@ -10,8 +10,8 @@ namespace Passports.Models.Configuration
             entityTypeBuilder.ToTable("passporthistory");
             entityTypeBuilder.Property(x => x.PassportSeries).HasColumnType("smallint");
             entityTypeBuilder.Property(x => x.PassportNumber).HasColumnType("integer");
-            entityTypeBuilder.Property(x => x.ActiveStart).HasColumnType("date");
-            entityTypeBuilder.Property(x => x.ActiveEnd).HasColumnType("date");
+            //entityTypeBuilder.Property(x => x.ActiveStart).HasColumnType("timestamp");
+            //entityTypeBuilder.Property(x => x.ActiveEnd).HasColumnType("timestamp");
             entityTypeBuilder.Property(x => x.Id).HasColumnName("id");
             entityTypeBuilder.Property(x => x.PassportSeries).HasColumnName("passp_series");
             entityTypeBuilder.Property(x => x.PassportNumber).HasColumnName("passp_number");

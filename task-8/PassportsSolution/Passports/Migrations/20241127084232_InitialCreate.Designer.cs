@@ -12,7 +12,7 @@ using Passports.Database;
 namespace Passports.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20241125124935_InitialCreate")]
+    [Migration("20241127084232_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -53,11 +53,11 @@ namespace Passports.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime?>("ActiveEnd")
+                    b.Property<DateOnly?>("ActiveEnd")
                         .HasColumnType("date")
                         .HasColumnName("active_end");
 
-                    b.Property<DateTime>("ActiveStart")
+                    b.Property<DateOnly>("ActiveStart")
                         .HasColumnType("date")
                         .HasColumnName("active_start");
 
@@ -104,11 +104,11 @@ namespace Passports.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime?>("ActiveEnd")
+                    b.Property<DateOnly?>("ActiveEnd")
                         .HasColumnType("date")
                         .HasColumnName("active_end");
 
-                    b.Property<DateTime>("ActiveStart")
+                    b.Property<DateOnly>("ActiveStart")
                         .HasColumnType("date")
                         .HasColumnName("active_start");
 

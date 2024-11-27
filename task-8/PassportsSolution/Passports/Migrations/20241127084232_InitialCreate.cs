@@ -46,8 +46,8 @@ namespace Passports.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     passp_series = table.Column<short>(type: "smallint", nullable: false),
                     passp_number = table.Column<int>(type: "integer", nullable: false),
-                    active_start = table.Column<DateTime>(type: "date", nullable: false),
-                    active_end = table.Column<DateTime>(type: "date", nullable: true)
+                    active_start = table.Column<DateOnly>(type: "date", nullable: false),
+                    active_end = table.Column<DateOnly>(type: "date", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -68,8 +68,8 @@ namespace Passports.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     passp_series = table.Column<string>(type: "varchar(9)", nullable: false),
                     passp_number = table.Column<int>(type: "integer", nullable: false),
-                    active_start = table.Column<DateTime>(type: "date", nullable: false),
-                    active_end = table.Column<DateTime>(type: "date", nullable: true)
+                    active_start = table.Column<DateOnly>(type: "date", nullable: false),
+                    active_end = table.Column<DateOnly>(type: "date", nullable: true)
                 },
                 constraints: table =>
                 {

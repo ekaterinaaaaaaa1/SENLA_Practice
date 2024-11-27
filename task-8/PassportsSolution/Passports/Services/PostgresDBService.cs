@@ -1,7 +1,10 @@
 ﻿using EFCore.BulkExtensions;
 using Passports.Converter;
 using Passports.Database;
+using Passports.Exceptions;
 using Passports.Models;
+using Passports.Models.DTO;
+using Passports.Models.EqualityComparers;
 using Passports.Models.Extensions;
 using Passports.Services.Interfaces;
 
@@ -11,6 +14,9 @@ namespace Passports.Services
     {
         private readonly ApplicationContext _context;
         private readonly IConfiguration _configuration;
+        private readonly int _gmtOffset;
+
+        private readonly string _gmtOffsetSection = "GmtOffset";
 
         private static string _directory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Converter", "data1");
         private static string _csvFile = Path.Combine(_directory, "Data1.csv");
@@ -19,6 +25,28 @@ namespace Passports.Services
         {
             _context = context;
             _configuration = configuration;
+            try
+            {
+                string? gmtOffsetValue = configuration.GetSection(_gmtOffsetSection).Value;
+                if (string.IsNullOrWhiteSpace(gmtOffsetValue))
+                {
+                    throw new EmptyConfigurationSectionException(_gmtOffsetSection);
+                }
+                if (!int.TryParse(gmtOffsetValue, out int gmtOffset))
+                {
+                    throw new ParseException();
+                }
+
+                _gmtOffset = gmtOffset;
+            }
+            catch (ParseException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            catch (EmptyConfigurationSectionException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
 
         public Passport? GetPassport(short series, int number)
@@ -26,10 +54,111 @@ namespace Passports.Services
             return _context.InactivePassports.Find(series, number);
         }
 
-        /*public List<PassportHistory> GetPassportHistory(Passport passport)
+        public UssrPassport? GetUssrPassport(string series, int number)
         {
-            return _context.PassportHistory.OrderBy(p => p.Id).Where(p => p.PassportSeries == passport.Series && p.PassportNumber == passport.Number).ToList();
-        }*/
+            return _context.InactiveUssrPassports.Find(series, number);
+        }
+
+        public List<PassportChanges> GetPassportHistory(Passport passport)
+        {
+            List<PassportChanges> passportChanges = new List<PassportChanges>();
+            List<PassportHistory> passportHistories = _context.PassportHistory.OrderBy(p => p.Id).Where(p => p.PassportSeries == passport.Series && p.PassportNumber == passport.Number).ToList();
+            
+            if (passportHistories.Any())
+            {
+                passportChanges = CreatePassportHistory(passportHistories);
+            }
+
+            return passportChanges;
+        }
+
+        public List<PassportChanges> GetUssrPassportHistory(UssrPassport passport)
+        {
+            List<PassportChanges> passportChanges = new List<PassportChanges>();
+            List<UssrPassportHistory> passportHistories = _context.UssrPassportHistory.OrderBy(p => p.Id).Where(p => p.PassportSeries == passport.Series && p.PassportNumber == passport.Number).ToList();
+
+            if (passportHistories.Any())
+            {
+                passportChanges = CreatePassportHistory(passportHistories);
+            }
+
+            return passportChanges;
+        }
+
+        public Dictionary<string, List<PassportChanges>> GetPassportsHistoriesByDate(DateOnly startDate, DateOnly endDate)
+        {
+            Dictionary<string, List<PassportChanges>> passportsHistoriesByDate = new Dictionary<string, List<PassportChanges>>();
+            
+            var passportHistories = _context.PassportHistory.ToList().OrderBy(p => p.Id).Where(p => (p.ActiveStart >= startDate) && ((p.ActiveEnd ?? DateOnly.FromDateTime(DateTime.Now)) <= endDate)).GroupBy(p => p.PassportSeries.ToString() + ", " + p.PassportNumber.ToString());
+            foreach (var group in passportHistories)
+            {
+                passportsHistoriesByDate.Add(group.Key, CreatePassportHistory(group.ToList()));
+            }
+
+            return passportsHistoriesByDate;
+        }
+
+        public Dictionary<string, List<PassportChanges>> GetUssrPassportsHistoriesByDate(DateOnly startDate, DateOnly endDate)
+        {
+            Dictionary<string, List<PassportChanges>> passportsHistoriesByDate = new Dictionary<string, List<PassportChanges>>();
+
+            var passportHistories = _context.UssrPassportHistory.OrderBy(p => p.Id).Where(p => (p.ActiveStart >= startDate) && ((p.ActiveEnd ?? DateOnly.FromDateTime(DateTime.Now)) <= endDate)).GroupBy(p => p.PassportSeries.ToString() + ", " + p.PassportNumber.ToString());
+            foreach (var group in passportHistories)
+            {
+                passportsHistoriesByDate.Add(group.Key, CreatePassportHistory(group.ToList()));
+            }
+
+            return passportsHistoriesByDate;
+        }
+
+        private List<PassportChanges> CreatePassportHistory(List<PassportHistory> passportHistories)
+        {
+            List<PassportChanges> passportChanges = new List<PassportChanges>();
+
+            for (int i = 0; i < passportHistories.Count - 1; i++)
+            {
+                Console.WriteLine(passportHistories[i].ActiveStart);
+                passportChanges.Add(new PassportChanges() { Start = passportHistories[i].ActiveStart, End = passportHistories[i].ActiveEnd, IsActive = true });
+                passportChanges.Add(new PassportChanges() { Start = passportHistories[i].ActiveEnd, End = passportHistories[i + 1].ActiveStart, IsActive = false });
+            }
+
+            DateOnly? lastActiveEnd = passportHistories.Last().ActiveEnd;
+            if (lastActiveEnd != null)
+            {
+                passportChanges.Add(new PassportChanges() { Start = passportHistories.Last().ActiveStart, End = passportHistories.Last().ActiveEnd, IsActive = true });
+                passportChanges.Add(new PassportChanges() { Start = passportHistories.Last().ActiveEnd, End = DateOnly.FromDateTime(DateTime.Now.ToUniversalTime().AddHours(_gmtOffset)), IsActive = false });
+            }
+            else
+            {
+                passportChanges.Add(new PassportChanges() { Start = passportHistories.Last().ActiveStart, End = DateOnly.FromDateTime(DateTime.Now.ToUniversalTime().AddHours(_gmtOffset)), IsActive = true });
+            }
+            
+            return passportChanges;
+        }
+
+        private List<PassportChanges> CreatePassportHistory(List<UssrPassportHistory> passportHistories)
+        {
+            List<PassportChanges> passportChanges = new List<PassportChanges>();
+
+            for (int i = 0; i < passportHistories.Count - 1; i++)
+            {
+                passportChanges.Add(new PassportChanges() { Start = passportHistories[i].ActiveStart, End = passportHistories[i].ActiveEnd, IsActive = true });
+                passportChanges.Add(new PassportChanges() { Start = passportHistories[i].ActiveEnd, End = passportHistories[i + 1].ActiveStart, IsActive = false });
+            }
+
+            DateOnly? lastActiveEnd = passportHistories.Last().ActiveEnd;
+            if (lastActiveEnd != null)
+            {
+                passportChanges.Add(new PassportChanges() { Start = passportHistories.Last().ActiveStart, End = passportHistories.Last().ActiveEnd, IsActive = true });
+                passportChanges.Add(new PassportChanges() { Start = passportHistories.Last().ActiveEnd, End = DateOnly.FromDateTime(DateTime.Now.ToUniversalTime().AddHours(_gmtOffset)), IsActive = false });
+            }
+            else
+            {
+                passportChanges.Add(new PassportChanges() { Start = passportHistories.Last().ActiveStart, End = DateOnly.FromDateTime(DateTime.Now.ToUniversalTime().AddHours(_gmtOffset)), IsActive = true });
+            }
+
+            return passportChanges;
+        }
 
         public async void Copy()
         {
@@ -95,9 +224,9 @@ namespace Passports.Services
                         PassportNumber = passport.Number,
                         PassportSeries = passport.Series,
                         Passport = passport,
-                        ActiveStart = DateTime.Now
+                        ActiveStart = DateOnly.FromDateTime(DateTime.Now.ToUniversalTime().AddHours(_gmtOffset))
                     };
-
+                    
                     passportHistories.Add(passportHistory);
                 }
 
@@ -126,7 +255,7 @@ namespace Passports.Services
                     passport.IsActive = false;
 
                     PassportHistory passportHistory = _context.PassportHistory.OrderBy(p => p.Id).Last(p => (p.PassportSeries == passport.Series) && (p.PassportNumber == passport.Number));
-                    passportHistory.ActiveEnd = DateTime.Now;
+                    passportHistory.ActiveEnd = DateOnly.FromDateTime(DateTime.Now.ToUniversalTime().AddHours(_gmtOffset));
                 }
             }
         }
@@ -148,7 +277,7 @@ namespace Passports.Services
                         PassportNumber = ussrPassport.Number,
                         PassportSeries = ussrPassport.Series,
                         UssrPassport = ussrPassport,
-                        ActiveStart = DateTime.Now
+                        ActiveStart = DateOnly.FromDateTime(DateTime.Now.ToUniversalTime().AddHours(_gmtOffset))
                     };
 
                     ussrPassportHistories.Add(ussrPassportHistory);
@@ -179,7 +308,7 @@ namespace Passports.Services
                     ussrPassport.IsActive = false;
 
                     UssrPassportHistory ussrPassportHistory = _context.UssrPassportHistory.OrderBy(p => p.Id).Last(p => (p.PassportSeries == ussrPassport.Series) && (p.PassportNumber == ussrPassport.Number));
-                    ussrPassportHistory.ActiveEnd = DateTime.Now;
+                    ussrPassportHistory.ActiveEnd = DateOnly.FromDateTime(DateTime.Now.ToUniversalTime().AddHours(_gmtOffset));
                 }
             }
         }

@@ -50,11 +50,11 @@ namespace Passports.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime?>("ActiveEnd")
+                    b.Property<DateOnly?>("ActiveEnd")
                         .HasColumnType("date")
                         .HasColumnName("active_end");
 
-                    b.Property<DateTime>("ActiveStart")
+                    b.Property<DateOnly>("ActiveStart")
                         .HasColumnType("date")
                         .HasColumnName("active_start");
 
@@ -101,11 +101,11 @@ namespace Passports.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime?>("ActiveEnd")
+                    b.Property<DateOnly?>("ActiveEnd")
                         .HasColumnType("date")
                         .HasColumnName("active_end");
 
-                    b.Property<DateTime>("ActiveStart")
+                    b.Property<DateOnly>("ActiveStart")
                         .HasColumnType("date")
                         .HasColumnName("active_start");
 

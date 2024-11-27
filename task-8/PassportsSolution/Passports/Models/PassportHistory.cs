@@ -9,7 +9,7 @@ namespace Passports.Models
         public short PassportSeries { get; set; }
         public int PassportNumber { get; set; }
         public Passport Passport { get; set; } = null!;
-        public DateTime ActiveStart { get; set; }
-        public DateTime? ActiveEnd { get; set; }
+        public DateOnly ActiveStart { get; set; }
+        public DateOnly? ActiveEnd { get; set; }
     }
 }
