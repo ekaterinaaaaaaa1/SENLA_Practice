@@ -86,7 +86,7 @@ namespace Passports.Controllers
             DateOnly startDate = new DateOnly(startYear, startMonth, startDay);
             DateOnly endDate = new DateOnly(endYear, endMonth, endDay);
 
-            Dictionary<string, List<PassportChanges>> passportsHistories = _dbService.GetPassportsHistoriesByDate(startDate, endDate);
+            List<KeyValuePair<PassportOnly, List<PassportChanges>>> passportsHistories = _dbService.GetPassportsHistoriesByDate(startDate, endDate);
 
             return new OkObjectResult(passportsHistories);
         }
@@ -98,7 +98,7 @@ namespace Passports.Controllers
             DateOnly startDate = new DateOnly(startYear, startMonth, startDay);
             DateOnly endDate = new DateOnly(endYear, endMonth, endDay);
 
-            Dictionary<string, List<PassportChanges>> passportsHistories = _dbService.GetUssrPassportsHistoriesByDate(startDate, endDate);
+            List<KeyValuePair<UssrPassportOnly, List<PassportChanges>>> passportsHistories = _dbService.GetUssrPassportsHistoriesByDate(startDate, endDate);
 
             return new OkObjectResult(passportsHistories);
         }

@@ -4,7 +4,6 @@ using Passports.Database;
 using Passports.Exceptions;
 using Passports.Models;
 using Passports.Models.DTO;
-using Passports.Models.EqualityComparers;
 using Passports.Models.Extensions;
 using Passports.Services.Interfaces;
 
@@ -85,27 +84,29 @@ namespace Passports.Services
             return passportChanges;
         }
 
-        public Dictionary<string, List<PassportChanges>> GetPassportsHistoriesByDate(DateOnly startDate, DateOnly endDate)
+        public List<KeyValuePair<PassportOnly, List<PassportChanges>>> GetPassportsHistoriesByDate(DateOnly startDate, DateOnly endDate)
         {
-            Dictionary<string, List<PassportChanges>> passportsHistoriesByDate = new Dictionary<string, List<PassportChanges>>();
+            var passportsHistoriesByDate = new List<KeyValuePair<PassportOnly, List<PassportChanges>>>();
             
-            var passportHistories = _context.PassportHistory.ToList().OrderBy(p => p.Id).Where(p => (p.ActiveStart >= startDate) && ((p.ActiveEnd ?? DateOnly.FromDateTime(DateTime.Now)) <= endDate)).GroupBy(p => p.PassportSeries.ToString() + ", " + p.PassportNumber.ToString());
+            var passportHistories = _context.PassportHistory.ToList().OrderBy(p => p.Id).Where(p => (p.ActiveStart >= startDate) && ((p.ActiveEnd ?? DateOnly.FromDateTime(DateTime.Now)) <= endDate)).GroupBy(p => new PassportOnly() { Series = p.PassportSeries, Number = p.PassportNumber });
             foreach (var group in passportHistories)
             {
-                passportsHistoriesByDate.Add(group.Key, CreatePassportHistory(group.ToList()));
+                var keyValuePair = new KeyValuePair<PassportOnly, List<PassportChanges>>(group.Key, CreatePassportHistory(group.ToList()));
+                passportsHistoriesByDate.Add(keyValuePair);
             }
 
             return passportsHistoriesByDate;
         }
 
-        public Dictionary<string, List<PassportChanges>> GetUssrPassportsHistoriesByDate(DateOnly startDate, DateOnly endDate)
+        public List<KeyValuePair<UssrPassportOnly, List<PassportChanges>>> GetUssrPassportsHistoriesByDate(DateOnly startDate, DateOnly endDate)
         {
-            Dictionary<string, List<PassportChanges>> passportsHistoriesByDate = new Dictionary<string, List<PassportChanges>>();
+            var passportsHistoriesByDate = new List<KeyValuePair<UssrPassportOnly, List<PassportChanges>>>();
 
-            var passportHistories = _context.UssrPassportHistory.OrderBy(p => p.Id).Where(p => (p.ActiveStart >= startDate) && ((p.ActiveEnd ?? DateOnly.FromDateTime(DateTime.Now)) <= endDate)).GroupBy(p => p.PassportSeries.ToString() + ", " + p.PassportNumber.ToString());
+            var passportHistories = _context.UssrPassportHistory.OrderBy(p => p.Id).Where(p => (p.ActiveStart >= startDate) && ((p.ActiveEnd ?? DateOnly.FromDateTime(DateTime.Now)) <= endDate)).GroupBy(p => new UssrPassportOnly() { Series = p.PassportSeries, Number = p.PassportNumber });
             foreach (var group in passportHistories)
             {
-                passportsHistoriesByDate.Add(group.Key, CreatePassportHistory(group.ToList()));
+                var keyValuePair = new KeyValuePair<UssrPassportOnly, List<PassportChanges>>(group.Key, CreatePassportHistory(group.ToList()));
+                passportsHistoriesByDate.Add(keyValuePair);
             }
 
             return passportsHistoriesByDate;

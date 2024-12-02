@@ -9,8 +9,8 @@ namespace Passports.Services.Interfaces
         public UssrPassport? GetUssrPassport(string series, int number);
         public List<PassportChanges> GetPassportHistory(Passport passport);
         public List<PassportChanges> GetUssrPassportHistory(UssrPassport passport);
-        public Dictionary<string, List<PassportChanges>> GetPassportsHistoriesByDate(DateOnly startDate, DateOnly endDate);
-        public Dictionary<string, List<PassportChanges>> GetUssrPassportsHistoriesByDate(DateOnly startDate, DateOnly endDate);
+        public List<KeyValuePair<PassportOnly, List<PassportChanges>>> GetPassportsHistoriesByDate(DateOnly startDate, DateOnly endDate);
+        public List<KeyValuePair<UssrPassportOnly, List<PassportChanges>>> GetUssrPassportsHistoriesByDate(DateOnly startDate, DateOnly endDate);
 
         public void Copy();
     }
