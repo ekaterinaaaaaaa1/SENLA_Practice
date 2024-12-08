@@ -29,7 +29,7 @@ namespace Passports.Migrations
                 name: "inactiveussrpassports",
                 columns: table => new
                 {
-                    passp_series = table.Column<string>(type: "varchar(9)", nullable: false),
+                    passp_series = table.Column<string>(type: "text", nullable: false),
                     passp_number = table.Column<int>(type: "integer", nullable: false),
                     active = table.Column<bool>(type: "boolean", nullable: false)
                 },
@@ -66,7 +66,7 @@ namespace Passports.Migrations
                 {
                     id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    passp_series = table.Column<string>(type: "varchar(9)", nullable: false),
+                    passp_series = table.Column<string>(type: "text", nullable: false),
                     passp_number = table.Column<int>(type: "integer", nullable: false),
                     active_start = table.Column<DateOnly>(type: "date", nullable: false),
                     active_end = table.Column<DateOnly>(type: "date", nullable: true)

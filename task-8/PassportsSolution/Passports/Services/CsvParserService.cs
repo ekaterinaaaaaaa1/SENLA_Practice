@@ -2,12 +2,20 @@
 
 namespace Passports.Services
 {
+    /// <summary>
+    /// Returns CSV parser service.
+    /// </summary>
     public static class CsvParserService
     {
         private const int SERIES_LENGTH = 4;
         private const int USSR_MAX_SERIES_LENGTH = 9;
         private const int NUMBER_LENGTH = 6;
 
+        /// <summary>
+        /// parses an input string to create Passport or UssrPassport object.
+        /// </summary>
+        /// <param name="inputString">An input string to parse.</param>
+        /// <returns>Returns an object if the string has been parsed or null overwise.</returns>
         public static object? Parse(string inputString)
         {
             string[] csv = inputString.Split(',');

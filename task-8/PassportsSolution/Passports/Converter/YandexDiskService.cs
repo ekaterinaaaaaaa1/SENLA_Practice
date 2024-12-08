@@ -6,12 +6,19 @@ using YandexDisk.Client.Protocol;
 
 namespace Passports.Converter
 {
+    /// <summary>
+    /// Represents Yandex Disk service.
+    /// </summary>
     public class YandexDiskService
     {
         private Resource? _data1Folder;
         private DiskHttpApi? _api;
         private readonly string _sectionName = "YandexDiskToken";
 
+        /// <summary>
+        /// YandexDiskService constructor.
+        /// </summary>
+        /// <param name="configuration">A set of key/value application configuration properties.</param>
         public YandexDiskService(IConfiguration configuration)
         {
             try
@@ -33,6 +40,11 @@ namespace Passports.Converter
             }
         }
 
+        /// <summary>
+        /// Downloads a file from Yandex Disk.
+        /// </summary>
+        /// <param name="destinationDirectory">The path to the downloaded file directory.</param>
+        /// <returns></returns>
         public async Task DownloadFileAsync(string destinationDirectory)
         {
             string zipDirectory = Path.Combine(destinationDirectory, "zip");
@@ -59,7 +71,7 @@ namespace Passports.Converter
             }
             catch (YandexDiskException)
             {
-                Console.WriteLine("An exception with Yandex Disk");
+                Console.WriteLine("Cannot get file from Yandex Disk");
             }
         }
     }

@@ -76,7 +76,7 @@ namespace Passports.Migrations
             modelBuilder.Entity("Passports.Models.UssrPassport", b =>
                 {
                     b.Property<string>("Series")
-                        .HasColumnType("varchar(9)")
+                        .HasColumnType("text")
                         .HasColumnName("passp_series");
 
                     b.Property<int>("Number")
@@ -115,7 +115,7 @@ namespace Passports.Migrations
 
                     b.Property<string>("PassportSeries")
                         .IsRequired()
-                        .HasColumnType("varchar(9)")
+                        .HasColumnType("text")
                         .HasColumnName("passp_series");
 
                     b.HasKey("Id");

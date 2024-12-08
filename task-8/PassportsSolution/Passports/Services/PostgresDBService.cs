@@ -9,6 +9,9 @@ using Passports.Services.Interfaces;
 
 namespace Passports.Services
 {
+    /// <summary>
+    /// Represents PostgreSQL service.
+    /// </summary>
     public class PostgresDBService : IDBService
     {
         private readonly ApplicationContext _context;
@@ -20,6 +23,11 @@ namespace Passports.Services
         private static string _directory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Converter", "data1");
         private static string _csvFile = Path.Combine(_directory, "Data1.csv");
 
+        /// <summary>
+        /// PostgresDBService constructor.
+        /// </summary>
+        /// <param name="context">DbContext of the application.</param>
+        /// <param name="configuration">A set of key/value application configuration properties.</param>
         public PostgresDBService(ApplicationContext context, IConfiguration configuration)
         {
             _context = context;

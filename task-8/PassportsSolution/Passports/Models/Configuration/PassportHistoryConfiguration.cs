@@ -3,15 +3,14 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Passports.Models.Configuration
 {
+    /// <summary>
+    /// Represents PassportHistory table configuration.
+    /// </summary>
     public class PassportHistoryConfiguration : IEntityTypeConfiguration<PassportHistory>
     {
         public void Configure(EntityTypeBuilder<PassportHistory> entityTypeBuilder)
         {
             entityTypeBuilder.ToTable("passporthistory");
-            entityTypeBuilder.Property(x => x.PassportSeries).HasColumnType("smallint");
-            entityTypeBuilder.Property(x => x.PassportNumber).HasColumnType("integer");
-            //entityTypeBuilder.Property(x => x.ActiveStart).HasColumnType("timestamp");
-            //entityTypeBuilder.Property(x => x.ActiveEnd).HasColumnType("timestamp");
             entityTypeBuilder.Property(x => x.Id).HasColumnName("id");
             entityTypeBuilder.Property(x => x.PassportSeries).HasColumnName("passp_series");
             entityTypeBuilder.Property(x => x.PassportNumber).HasColumnName("passp_number");

@@ -3,6 +3,9 @@ using Microsoft.EntityFrameworkCore.Design;
 
 namespace Passports.Database
 {
+    /// <summary>
+    /// DbContextFactory for migrations.
+    /// </summary>
     public class DbContextFactory() : IDesignTimeDbContextFactory<ApplicationContext>
     {
         public ApplicationContext CreateDbContext(string[] args)

@@ -1,10 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Passports.Models;
-using Passports.Models.DTO;
-using Passports.Models.JsonConverters;
 using Passports.Services.Interfaces;
-using System.ComponentModel;
-using Newtonsoft.Json;
 
 namespace Passports.Controllers
 {
@@ -58,7 +54,7 @@ namespace Passports.Controllers
                 return NotFound();
             }
 
-            List<PassportChanges> passportHistory = _dbService.GetPassportHistory(passport);
+            var passportHistory = _dbService.GetPassportHistory(passport);
 
             return new OkObjectResult(passportHistory);
         }
@@ -74,7 +70,7 @@ namespace Passports.Controllers
                 return NotFound();
             }
 
-            List<PassportChanges> passportHistory = _dbService.GetUssrPassportHistory(passport);
+            var passportHistory = _dbService.GetUssrPassportHistory(passport);
 
             return new OkObjectResult(passportHistory);
         }
@@ -86,7 +82,7 @@ namespace Passports.Controllers
             DateOnly startDate = new DateOnly(startYear, startMonth, startDay);
             DateOnly endDate = new DateOnly(endYear, endMonth, endDay);
 
-            List<KeyValuePair<PassportOnly, List<PassportChanges>>> passportsHistories = _dbService.GetPassportsHistoriesByDate(startDate, endDate);
+            var passportsHistories = _dbService.GetPassportsHistoriesByDate(startDate, endDate);
 
             return new OkObjectResult(passportsHistories);
         }
@@ -98,7 +94,7 @@ namespace Passports.Controllers
             DateOnly startDate = new DateOnly(startYear, startMonth, startDay);
             DateOnly endDate = new DateOnly(endYear, endMonth, endDay);
 
-            List<KeyValuePair<UssrPassportOnly, List<PassportChanges>>> passportsHistories = _dbService.GetUssrPassportsHistoriesByDate(startDate, endDate);
+            var passportsHistories = _dbService.GetUssrPassportsHistoriesByDate(startDate, endDate);
 
             return new OkObjectResult(passportsHistories);
         }

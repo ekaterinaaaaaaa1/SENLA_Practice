@@ -3,6 +3,11 @@ using Passports.Exceptions;
 
 namespace Passports.Converter
 {
+    /// <summary>
+    /// IHostedService for data conversion.
+    /// </summary>
+    /// <param name="serviceScopeFactory">A factory for creating service scope for the database service.</param>
+    /// <param name="configuration">A set of key/value application configuration properties.</param>
     public class DataConverterService(IServiceScopeFactory serviceScopeFactory, IConfiguration configuration) : BackgroundService
     {
         private readonly string _gmtOffsetSection = "GmtOffset";
