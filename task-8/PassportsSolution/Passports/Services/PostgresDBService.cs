@@ -6,6 +6,7 @@ using Passports.Models;
 using Passports.Models.DTO;
 using Passports.Models.Extensions;
 using Passports.Services.Interfaces;
+using System.Text.RegularExpressions;
 
 namespace Passports.Services
 {
@@ -16,12 +17,16 @@ namespace Passports.Services
     {
         private readonly ApplicationContext _context;
         private readonly IConfiguration _configuration;
-        private readonly int _gmtOffset;
+        private readonly int _gmtOffset = 3;
 
         private readonly string _gmtOffsetSection = "GmtOffset";
 
         private static string _directory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Converter", "data1");
         private static string _csvFile = Path.Combine(_directory, "Data1.csv");
+
+        private static Regex SeriesRegex { get; } = new(@"^\d{4}$");
+        private static Regex UssrSeriesRegex { get; } = new(@"^(I|X|V){1,6}-[А-Я]{2}$");
+        private static Regex NumberRegex { get; } = new(@"^\d{6}$");
 
         /// <summary>
         /// PostgresDBService constructor.
@@ -56,14 +61,24 @@ namespace Passports.Services
             }
         }
 
-        public Passport? GetPassport(short series, int number)
+        public Passport? GetPassport(string series, string number)
         {
-            return _context.InactivePassports.Find(series, number);
+            if (!CheckPassportFormat(series, number))
+            {
+                return null;
+            }
+            
+            return _context.InactivePassports.Find(short.Parse(series), int.Parse(number));
         }
 
-        public UssrPassport? GetUssrPassport(string series, int number)
+        public UssrPassport? GetUssrPassport(string series, string number)
         {
-            return _context.InactiveUssrPassports.Find(series, number);
+            if (!CheckUssrPassportFormat(series, number))
+            {
+                return null;
+            }
+
+            return _context.InactiveUssrPassports.Find(series, int.Parse(number));
         }
 
         public List<PassportChanges> GetPassportHistory(Passport passport)
@@ -167,6 +182,26 @@ namespace Passports.Services
             }
 
             return passportChanges;
+        }
+
+        private bool CheckPassportFormat(string series, string number)
+        {
+            if ((!SeriesRegex.IsMatch(series)) || (!NumberRegex.IsMatch(number)))
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        private bool CheckUssrPassportFormat(string series, string number)
+        {
+            if ((!UssrSeriesRegex.IsMatch(series)) || (!NumberRegex.IsMatch(number)))
+            {
+                return false;
+            }
+
+            return true;
         }
 
         public async void Copy()

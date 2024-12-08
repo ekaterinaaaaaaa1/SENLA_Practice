@@ -11,7 +11,7 @@ namespace Passports.Services.Interfaces
         /// <param name="series">The passport series.</param>
         /// <param name="number">The passport number.</param>
         /// <returns>Returns the Passport object or null if it does not exist.</returns>
-        public Passport? GetPassport(short series, int number);
+        public Passport? GetPassport(string series, string number);
 
         /// <summary>
         /// Gets a USSR passport and its activity by series and number.
@@ -19,7 +19,7 @@ namespace Passports.Services.Interfaces
         /// <param name="series">The passport series.</param>
         /// <param name="number">The passport number.</param>
         /// <returns>Returns the UssrPassport object or null if it does not exist</returns>
-        public UssrPassport? GetUssrPassport(string series, int number);
+        public UssrPassport? GetUssrPassport(string series, string number);
 
         /// <summary>
         /// Gets a passport changes list.

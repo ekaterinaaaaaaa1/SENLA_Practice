@@ -45,7 +45,7 @@ CREATE INDEX "IX_passporthistory_passp_series_passp_number" ON passporthistory (
 CREATE INDEX "IX_ussrpassporthistory_passp_series_passp_number" ON ussrpassporthistory (passp_series, passp_number);
 
 INSERT INTO "__EFMigrationsHistory" ("MigrationId", "ProductVersion")
-VALUES ('20241127084232_InitialCreate', '8.0.10');
+VALUES ('20241208185923_InitialCreate', '8.0.10');
 
 COMMIT;
 
