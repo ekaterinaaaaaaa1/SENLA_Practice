@@ -27,4 +27,4 @@ jobs:
       run: dotnet build --no-restore
       working-directory: task-8/PassportsSolution/Passports
     - name: Test
-      run: dotnet test task-8/PassportsSolution/PassportSolution.Tests --no-build --verbosity normal
+      run: dotnet test task-8/PassportsSolution/PassportSolution.Tests --verbosity normal
