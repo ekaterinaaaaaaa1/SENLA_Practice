@@ -18,6 +18,7 @@ namespace Passports.Services
         private readonly ApplicationContext _context;
         private readonly IConfiguration _configuration;
         private readonly int _gmtOffset = 3;
+        private const int INSERT_SIZE = 100000;
 
         private readonly string _gmtOffsetSection = "GmtOffset";
 
@@ -218,32 +219,45 @@ namespace Passports.Services
                 List<Passport> inactivePassportsFromDb = _context.InactivePassports.ToList();
                 List<UssrPassport> inactiveUssrPassportsFromDb = _context.InactiveUssrPassports.ToList();
 
+                bool next = true;
                 string? line = await streamReader.ReadLineAsync();
-                while ((line = await streamReader.ReadLineAsync()) != null)
+                while (next)
                 {
-                    object? parsedLine = CsvParserService.Parse(line);
-                    if (parsedLine != null)
+                    for (int j = 0; j < INSERT_SIZE; j++)
                     {
-                        if (parsedLine is Passport)
+                        if ((line = await streamReader.ReadLineAsync()) == null)
                         {
-                            csvPassports.Add((Passport)parsedLine);
+                            next = false;
+                            break;
                         }
-                        else
+
+                        object? parsedLine = CsvParserService.Parse(line);
+                        if (parsedLine != null)
                         {
-                            csvUssrPassports.Add((UssrPassport)parsedLine);
+                            if (parsedLine is Passport)
+                            {
+                                csvPassports.Add((Passport)parsedLine);
+                            }
+                            else
+                            {
+                                csvUssrPassports.Add((UssrPassport)parsedLine);
+                            }
                         }
                     }
+
+                    await AddActivePassports(inactivePassportsFromDb, csvPassports);
+                    await AddInactivePassports(inactivePassportsFromDb, csvPassports);
+                    AddFromActiveToInactivePassports(inactivePassportsFromDb, csvPassports);
+
+                    await AddActiveUssrPassports(inactiveUssrPassportsFromDb, csvUssrPassports);
+                    await AddInactiveUssrPassports(inactiveUssrPassportsFromDb, csvUssrPassports);
+                    AddFromActiveToInactiveUssrPassports(inactiveUssrPassportsFromDb, csvUssrPassports);
+
+                    await _context.BulkSaveChangesAsync();
+
+                    csvPassports.Clear();
+                    csvUssrPassports.Clear();
                 }
-                
-                await AddActivePassports(inactivePassportsFromDb, csvPassports);
-                await AddInactivePassports(inactivePassportsFromDb, csvPassports);
-                AddFromActiveToInactivePassports(inactivePassportsFromDb, csvPassports);
-
-                await AddActiveUssrPassports(inactiveUssrPassportsFromDb, csvUssrPassports);
-                await AddInactiveUssrPassports(inactiveUssrPassportsFromDb, csvUssrPassports);
-                AddFromActiveToInactiveUssrPassports(inactiveUssrPassportsFromDb, csvUssrPassports);
-
-                await _context.BulkSaveChangesAsync();
             }
             catch (FileNotFoundException e)
             {
