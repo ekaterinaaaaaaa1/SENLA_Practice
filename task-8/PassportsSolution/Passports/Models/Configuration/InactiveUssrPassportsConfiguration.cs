@@ -4,13 +4,14 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace Passports.Models.Configuration
 {
     /// <summary>
-    /// Represents InactivePassports table configuration.
+    /// Represents InactiveUssrPassports table configuration.
     /// </summary>
-    public class InactivePassportsConfiguration : IEntityTypeConfiguration<Passport>
+    public class InactiveUssrPassportsConfiguration : IEntityTypeConfiguration<UssrPassport>
     {
-        public void Configure(EntityTypeBuilder<Passport> entityTypeBuilder)
+        public void Configure(EntityTypeBuilder<UssrPassport> entityTypeBuilder)
         {
-            entityTypeBuilder.ToTable("inactivepassports");
+            entityTypeBuilder.ToTable("inactiveussrpassports");
+            entityTypeBuilder.Property(x => x.Series).HasColumnType("varchar(9)");
             entityTypeBuilder.Property(x => x.Series).HasColumnName("passp_series");
             entityTypeBuilder.Property(x => x.Number).HasColumnName("passp_number");
             entityTypeBuilder.Property(x => x.IsActive).HasColumnName("active");

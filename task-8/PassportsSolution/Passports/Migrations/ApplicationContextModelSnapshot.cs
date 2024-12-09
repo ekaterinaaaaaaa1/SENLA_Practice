@@ -50,11 +50,11 @@ namespace Passports.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime?>("ActiveEnd")
+                    b.Property<DateOnly?>("ActiveEnd")
                         .HasColumnType("date")
                         .HasColumnName("active_end");
 
-                    b.Property<DateTime>("ActiveStart")
+                    b.Property<DateOnly>("ActiveStart")
                         .HasColumnType("date")
                         .HasColumnName("active_start");
 
@@ -73,6 +73,58 @@ namespace Passports.Migrations
                     b.ToTable("passporthistory", (string)null);
                 });
 
+            modelBuilder.Entity("Passports.Models.UssrPassport", b =>
+                {
+                    b.Property<string>("Series")
+                        .HasColumnType("varchar(9)")
+                        .HasColumnName("passp_series");
+
+                    b.Property<int>("Number")
+                        .HasColumnType("integer")
+                        .HasColumnName("passp_number");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean")
+                        .HasColumnName("active");
+
+                    b.HasKey("Series", "Number");
+
+                    b.ToTable("inactiveussrpassports", (string)null);
+                });
+
+            modelBuilder.Entity("Passports.Models.UssrPassportHistory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateOnly?>("ActiveEnd")
+                        .HasColumnType("date")
+                        .HasColumnName("active_end");
+
+                    b.Property<DateOnly>("ActiveStart")
+                        .HasColumnType("date")
+                        .HasColumnName("active_start");
+
+                    b.Property<int>("PassportNumber")
+                        .HasColumnType("integer")
+                        .HasColumnName("passp_number");
+
+                    b.Property<string>("PassportSeries")
+                        .IsRequired()
+                        .HasColumnType("varchar(9)")
+                        .HasColumnName("passp_series");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PassportSeries", "PassportNumber");
+
+                    b.ToTable("ussrpassporthistory", (string)null);
+                });
+
             modelBuilder.Entity("Passports.Models.PassportHistory", b =>
                 {
                     b.HasOne("Passports.Models.Passport", "Passport")
@@ -84,9 +136,25 @@ namespace Passports.Migrations
                     b.Navigation("Passport");
                 });
 
+            modelBuilder.Entity("Passports.Models.UssrPassportHistory", b =>
+                {
+                    b.HasOne("Passports.Models.UssrPassport", "UssrPassport")
+                        .WithMany("UssrPassportHistories")
+                        .HasForeignKey("PassportSeries", "PassportNumber")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("UssrPassport");
+                });
+
             modelBuilder.Entity("Passports.Models.Passport", b =>
                 {
                     b.Navigation("PassportHistories");
+                });
+
+            modelBuilder.Entity("Passports.Models.UssrPassport", b =>
+                {
+                    b.Navigation("UssrPassportHistories");
                 });
 #pragma warning restore 612, 618
         }

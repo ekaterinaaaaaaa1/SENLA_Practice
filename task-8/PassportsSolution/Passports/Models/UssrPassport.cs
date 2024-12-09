@@ -1,14 +1,14 @@
 ﻿namespace Passports.Models
 {
     /// <summary>
-    /// Represent a passport entity.
+    /// Represents a USSR passport entity.
     /// </summary>
-    public class Passport
+    public class UssrPassport
     {
         /// <summary>
         /// The passport series.
         /// </summary>
-        public short Series { get; set; }
+        public string Series { get; set; } = null!;
 
         /// <summary>
         /// The passport number.
@@ -23,11 +23,11 @@
         /// <summary>
         /// The navigation property for the passport history collection.
         /// </summary>
-        public ICollection<PassportHistory> PassportHistories { get; set; } = null!;
+        public ICollection<UssrPassportHistory> UssrPassportHistories { get; set; } = null!;
 
         public override bool Equals(object? obj)
         {
-            if (obj is Passport passport)
+            if (obj is UssrPassport passport)
             {
                 return passport.Series == Series && passport.Number == Number;
             }

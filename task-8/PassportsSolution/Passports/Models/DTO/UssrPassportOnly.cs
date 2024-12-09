@@ -1,33 +1,23 @@
-﻿namespace Passports.Models
+﻿namespace Passports.Models.DTO
 {
     /// <summary>
-    /// Represent a passport entity.
+    /// Contains only the USSR passport series and number.
     /// </summary>
-    public class Passport
+    public class UssrPassportOnly
     {
         /// <summary>
         /// The passport series.
         /// </summary>
-        public short Series { get; set; }
+        public string Series { get; set; } = null!;
 
         /// <summary>
         /// The passport number.
         /// </summary>
         public int Number { get; set; }
-
-        /// <summary>
-        /// The passport activity.
-        /// </summary>
-        public bool IsActive { get; set; }
-
-        /// <summary>
-        /// The navigation property for the passport history collection.
-        /// </summary>
-        public ICollection<PassportHistory> PassportHistories { get; set; } = null!;
-
+       
         public override bool Equals(object? obj)
         {
-            if (obj is Passport passport)
+            if (obj is UssrPassport passport)
             {
                 return passport.Series == Series && passport.Number == Number;
             }

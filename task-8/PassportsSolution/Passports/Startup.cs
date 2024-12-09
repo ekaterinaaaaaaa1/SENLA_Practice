@@ -6,15 +6,29 @@ using Passports.Services.Interfaces;
 
 namespace Passports
 {
+    /// <summary>
+    /// Represents Startup class.
+    /// </summary>
     public class Startup
     {
+        /// <summary>
+        /// Startup constructor.
+        /// </summary>
+        /// <param name="configuration">A set of key/value application configuration properties.</param>
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
 
+        /// <summary>
+        /// A set of key/value application configuration properties.
+        /// </summary>
         public IConfiguration Configuration { get; }
 
+        /// <summary>
+        /// Configures services.
+        /// </summary>
+        /// <param name="services">The services collection.</param>
         public void ConfigureServices(IServiceCollection services)
         {
             string? connection = Configuration.GetConnectionString("DefaultConnection");
@@ -26,6 +40,11 @@ namespace Passports
             services.AddSwaggerGen();
         }
 
+        /// <summary>
+        /// Configures an application.
+        /// </summary>
+        /// <param name="app">IApplicationBuilder.</param>
+        /// <param name="env">IWebHostEnvironment.</param>
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())

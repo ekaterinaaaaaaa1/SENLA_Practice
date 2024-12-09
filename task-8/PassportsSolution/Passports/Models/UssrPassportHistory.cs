@@ -1,9 +1,6 @@
 ﻿namespace Passports.Models
 {
-    /// <summary>
-    /// Represents a passport history entity.
-    /// </summary>
-    public class PassportHistory
+    public class UssrPassportHistory
     {
         /// <summary>
         /// The passport history Id.
@@ -13,7 +10,7 @@
         /// <summary>
         /// The passport series.
         /// </summary>
-        public short PassportSeries { get; set; }
+        public string PassportSeries { get; set; } = null!;
 
         /// <summary>
         /// The passport number.
@@ -23,7 +20,7 @@
         /// <summary>
         /// The navigation property for the passport.
         /// </summary>
-        public Passport Passport { get; set; } = null!;
+        public UssrPassport UssrPassport { get; set; } = null!;
 
         /// <summary>
         /// The start date of the active state.

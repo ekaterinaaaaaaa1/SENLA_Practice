@@ -3,10 +3,15 @@ using Passports.Exceptions;
 
 namespace Passports.Converter
 {
+    /// <summary>
+    /// IHostedService for data conversion.
+    /// </summary>
+    /// <param name="serviceScopeFactory">A factory for creating service scope for the database service.</param>
+    /// <param name="configuration">A set of key/value application configuration properties.</param>
     public class DataConverterService(IServiceScopeFactory serviceScopeFactory, IConfiguration configuration) : BackgroundService
     {
-        private const int GMT_OFFSET = 3;
-        private readonly string _sectionName = "ReadingCsvTime";
+        private readonly string _gmtOffsetSection = "GmtOffset";
+        private readonly string _readingCsvTimeSection = "ReadingCsvTime";
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
@@ -16,24 +21,31 @@ namespace Passports.Converter
 
             try
             {
-                string? time = configuration.GetSection(_sectionName).Value;
-                if (!string.IsNullOrWhiteSpace(time))
+                string? time = configuration.GetSection(_readingCsvTimeSection).Value;
+                if (string.IsNullOrWhiteSpace(time))
                 {
-                    bool parse = TimeSpan.TryParse(time, out TimeSpan readingCsvTime);
-                    if (!parse)
-                    {
-                        throw new ParseException();
-                    }
-                    readingCsvTotalMinutes = Math.Floor(readingCsvTime.TotalMinutes);
+                    throw new EmptyConfigurationSectionException(_readingCsvTimeSection);
                 }
-                else
+                if (!TimeSpan.TryParse(time, out TimeSpan readingCsvTime))
                 {
-                    throw new EmptyConfigurationSectionException(_sectionName);
+                    throw new ParseException();
                 }
+
+                readingCsvTotalMinutes = Math.Floor(readingCsvTime.TotalMinutes);
 
                 while (!stoppingToken.IsCancellationRequested)
                 {
-                    TimeSpan timeNow = DateTime.Now.AddHours(GMT_OFFSET).TimeOfDay;
+                    string? gmtOffsetValue = configuration.GetSection(_gmtOffsetSection).Value;
+                    if (string.IsNullOrWhiteSpace(gmtOffsetValue))
+                    {
+                        throw new EmptyConfigurationSectionException(_gmtOffsetSection);
+                    }
+                    if (!int.TryParse(gmtOffsetValue, out int gmtOffset))
+                    {
+                        throw new ParseException();
+                    }
+
+                    TimeSpan timeNow = DateTime.Now.ToUniversalTime().AddHours(gmtOffset).TimeOfDay;
 
                     if (Convert.ToInt32(Math.Floor(timeNow.TotalMinutes)) == Convert.ToInt32(readingCsvTotalMinutes))
                     {

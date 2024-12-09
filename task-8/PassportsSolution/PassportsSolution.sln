@@ -5,6 +5,8 @@ VisualStudioVersion = 17.10.35122.118
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Passports", "Passports\Passports.csproj", "{F8DC0D0B-75FB-4318-87F1-0CA0AD3B57EB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Passports.Tests", "PassportSolution.Tests\Passports.Tests.csproj", "{A4583FDF-5107-4E8B-80E4-60A5E7F4AD6E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{F8DC0D0B-75FB-4318-87F1-0CA0AD3B57EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F8DC0D0B-75FB-4318-87F1-0CA0AD3B57EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F8DC0D0B-75FB-4318-87F1-0CA0AD3B57EB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A4583FDF-5107-4E8B-80E4-60A5E7F4AD6E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A4583FDF-5107-4E8B-80E4-60A5E7F4AD6E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A4583FDF-5107-4E8B-80E4-60A5E7F4AD6E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A4583FDF-5107-4E8B-80E4-60A5E7F4AD6E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
