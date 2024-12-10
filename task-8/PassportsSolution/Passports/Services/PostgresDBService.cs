@@ -18,7 +18,7 @@ namespace Passports.Services
         private readonly ApplicationContext _context;
         private readonly IConfiguration _configuration;
         private readonly int _gmtOffset = 3;
-        private const int INSERT_SIZE = 100000;
+        private const int INSERT_SIZE = 10000;
 
         private readonly string _gmtOffsetSection = "GmtOffset";
 
@@ -209,6 +209,7 @@ namespace Passports.Services
         {
             try
             {
+                Console.WriteLine("Start");
                 YandexDiskService yandexDiskService = new YandexDiskService(_configuration);
                 await yandexDiskService.DownloadFileAsync(_directory);
 
@@ -218,7 +219,7 @@ namespace Passports.Services
                 List<UssrPassport> csvUssrPassports = new List<UssrPassport>();
                 List<Passport> inactivePassportsFromDb = _context.InactivePassports.ToList();
                 List<UssrPassport> inactiveUssrPassportsFromDb = _context.InactiveUssrPassports.ToList();
-
+                
                 bool next = true;
                 string? line = await streamReader.ReadLineAsync();
                 while (next)
@@ -258,6 +259,7 @@ namespace Passports.Services
                     csvPassports.Clear();
                     csvUssrPassports.Clear();
                 }
+                Console.WriteLine("DONE {0}", DateTime.UtcNow.AddHours(_gmtOffset));
             }
             catch (FileNotFoundException e)
             {
