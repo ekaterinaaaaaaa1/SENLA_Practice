@@ -209,7 +209,6 @@ namespace Passports.Services
         {
             try
             {
-                Console.WriteLine("Start");
                 YandexDiskService yandexDiskService = new YandexDiskService(_configuration);
                 await yandexDiskService.DownloadFileAsync(_directory);
 
