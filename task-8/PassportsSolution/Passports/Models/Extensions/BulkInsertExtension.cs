@@ -9,12 +9,7 @@ namespace Passports.Models.Extensions
 
         public static async Task BulkInsertByBatchesAsync(ApplicationContext applicationContext, IEnumerable<T> collection)
         {
-            int collectionSize = collection.Count();
-
-            for (int i = 0; i < collectionSize; i += BATCH_SIZE)
-            {
-                await applicationContext.BulkInsertAsync(collection.Skip(i).Take(BATCH_SIZE));
-            }
+            await applicationContext.BulkInsertAsync(collection, new BulkConfig { BatchSize = BATCH_SIZE });
         }
     }
 }

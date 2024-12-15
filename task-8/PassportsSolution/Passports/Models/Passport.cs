@@ -1,24 +1,14 @@
 ﻿namespace Passports.Models
 {
     /// <summary>
-    /// Represent a passport entity.
+    /// Represent a Russian passport entity.
     /// </summary>
-    public class Passport
+    public class Passport : BasePassport
     {
         /// <summary>
         /// The passport series.
         /// </summary>
         public short Series { get; set; }
-
-        /// <summary>
-        /// The passport number.
-        /// </summary>
-        public int Number { get; set; }
-
-        /// <summary>
-        /// The passport activity.
-        /// </summary>
-        public bool IsActive { get; set; }
 
         /// <summary>
         /// The navigation property for the passport history collection.

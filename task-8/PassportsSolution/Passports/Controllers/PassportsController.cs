@@ -23,34 +23,28 @@ namespace Passports.Controllers
             {
                 return BadRequest();
             }
-            
-            Passport? passport = _dbService.GetPassport(series, number);
-            
-            if (passport == null)
+
+            if (_dbService.CheckUssrPassportFormat(series, number))
             {
-                return NotFound();
+                UssrPassport? passport = _dbService.GetUssrPassport(series, number);
+
+                if (passport != null)
+                {
+                    return new OkObjectResult(passport);
+                }
             }
 
-            return new OkObjectResult(passport);
-        }
-
-        [HttpGet]
-        [Route("GetUssrPassport")]
-        public IActionResult GetUssrPassport(string? series, string? number)
-        {
-            if (series == null || number == null)
+            if (_dbService.CheckPassportFormat(series, number))
             {
-                return BadRequest();
+                Passport? passport = _dbService.GetPassport(series, number);
+
+                if (passport != null)
+                {
+                    return new OkObjectResult(passport);
+                }
             }
 
-            UssrPassport? passport = _dbService.GetUssrPassport(series, number);
-
-            if (passport == null)
-            {
-                return NotFound();
-            }
-
-            return new OkObjectResult(passport);
+            return NotFound();
         }
 
         [HttpGet]
@@ -62,37 +56,29 @@ namespace Passports.Controllers
                 return BadRequest();
             }
 
-            Passport? passport = _dbService.GetPassport(series, number);
-
-            if (passport == null)
+            if (_dbService.CheckUssrPassportFormat(series, number))
             {
-                return NotFound();
+                UssrPassport? passport = _dbService.GetUssrPassport(series, number);
+
+                if (passport != null)
+                {
+                    var passportHistory = _dbService.GetUssrPassportHistory(passport);
+                    return new OkObjectResult(passportHistory);
+                }
             }
 
-            var passportHistory = _dbService.GetPassportHistory(passport);
-
-            return new OkObjectResult(passportHistory);
-        }
-
-        [HttpGet]
-        [Route("GetUssrPassportHistory")]
-        public IActionResult GetUssrPassportHistory(string? series, string? number)
-        {
-            if (series == null || number == null)
+            if (_dbService.CheckPassportFormat(series, number))
             {
-                return BadRequest();
+                Passport? passport = _dbService.GetPassport(series, number);
+
+                if (passport != null)
+                {
+                    var passportHistory = _dbService.GetPassportHistory(passport);
+                    return new OkObjectResult(passportHistory);
+                }
             }
 
-            UssrPassport? passport = _dbService.GetUssrPassport(series, number);
-
-            if (passport == null)
-            {
-                return NotFound();
-            }
-
-            var passportHistory = _dbService.GetUssrPassportHistory(passport);
-
-            return new OkObjectResult(passportHistory);
+            return NotFound();
         }
 
         [HttpGet]
@@ -107,24 +93,7 @@ namespace Passports.Controllers
             DateOnly startDate = new DateOnly((int)startYear, (int)startMonth, (int)startDay);
             DateOnly endDate = new DateOnly((int)endYear, (int)endMonth, (int)endDay);
 
-            var passportsHistories = _dbService.GetPassportsHistoriesByDate(startDate, endDate);
-
-            return new OkObjectResult(passportsHistories);
-        }
-
-        [HttpGet]
-        [Route("GetUssrPassportsHistoriesByDate")]
-        public IActionResult GetUssrPassportsHistoriesByDate(int? startYear, int? startMonth, int? startDay, int? endYear, int? endMonth, int? endDay)
-        {
-            if (startYear == null || startMonth == null || startDay == null || endYear == null || endMonth == null || endDay == null)
-            {
-                return BadRequest();
-            }
-
-            DateOnly startDate = new DateOnly((int)startYear, (int)startMonth, (int)startDay);
-            DateOnly endDate = new DateOnly((int)endYear, (int)endMonth, (int)endDay);
-
-            var passportsHistories = _dbService.GetUssrPassportsHistoriesByDate(startDate, endDate);
+            var passportsHistories = _dbService.GetPassportsHistoriesByDate(startDate, endDate).Concat(_dbService.GetUssrPassportsHistoriesByDate(startDate, endDate));
 
             return new OkObjectResult(passportsHistories);
         }

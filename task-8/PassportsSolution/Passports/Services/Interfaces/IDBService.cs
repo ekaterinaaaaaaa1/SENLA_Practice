@@ -49,7 +49,23 @@ namespace Passports.Services.Interfaces
         /// <param name="startDate"></param>
         /// <param name="endDate"></param>
         /// <returns></returns>
-        public List<KeyValuePair<UssrPassportOnly, List<PassportChanges>>> GetUssrPassportsHistoriesByDate(DateOnly startDate, DateOnly endDate);
+        public List<KeyValuePair<PassportOnly, List<PassportChanges>>> GetUssrPassportsHistoriesByDate(DateOnly startDate, DateOnly endDate);
+
+        /// <summary>
+        /// Checks whether the series and number match the Russian passport format
+        /// </summary>
+        /// <param name="series">Input series.</param>
+        /// <param name="number">Input number.</param>
+        /// <returns>True if Russian passport, false otherwise.</returns>
+        public bool CheckPassportFormat(string series, string number);
+
+        /// <summary>
+        /// Checks whether the series and number match the Ussr passport format
+        /// </summary>
+        /// <param name="series">Input series.</param>
+        /// <param name="number">Input number.</param>
+        /// <returns>True if Ussr passport, false otherwise.</returns>
+        public bool CheckUssrPassportFormat(string series, string number);
 
         /// <summary>
         /// Uploads data from CSV to the database.

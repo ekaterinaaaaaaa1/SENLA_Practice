@@ -55,11 +55,7 @@ namespace Passports.Converter
                     await Task.Delay(60000);
                 }
             }
-            catch (ParseException ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-            catch (EmptyConfigurationSectionException ex)
+            catch (Exception ex) when (ex is ParseException || ex is EmptyConfigurationSectionException)
             {
                 Console.WriteLine(ex.Message);
             }

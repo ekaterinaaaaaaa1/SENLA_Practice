@@ -52,11 +52,7 @@ namespace Passports.Services
 
                 _gmtOffset = gmtOffset;
             }
-            catch (ParseException ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-            catch (EmptyConfigurationSectionException ex)
+            catch (Exception ex) when (ex is ParseException || ex is EmptyConfigurationSectionException)
             {
                 Console.WriteLine(ex.Message);
             }
@@ -64,21 +60,11 @@ namespace Passports.Services
 
         public Passport? GetPassport(string series, string number)
         {
-            if (!CheckPassportFormat(series, number))
-            {
-                return null;
-            }
-            
             return _context.InactivePassports.Find(short.Parse(series), int.Parse(number));
         }
 
         public UssrPassport? GetUssrPassport(string series, string number)
         {
-            if (!CheckUssrPassportFormat(series, number))
-            {
-                return null;
-            }
-
             return _context.InactiveUssrPassports.Find(series, int.Parse(number));
         }
 
@@ -112,7 +98,7 @@ namespace Passports.Services
         {
             var passportsHistoriesByDate = new List<KeyValuePair<PassportOnly, List<PassportChanges>>>();
             
-            var passportHistories = _context.PassportHistory.ToList().OrderBy(p => p.Id).Where(p => (p.ActiveStart >= startDate) && ((p.ActiveEnd ?? DateOnly.FromDateTime(DateTime.Now)) <= endDate)).GroupBy(p => new PassportOnly() { Series = p.PassportSeries, Number = p.PassportNumber });
+            var passportHistories = _context.PassportHistory.ToList().OrderBy(p => p.Id).Where(p => (p.ActiveStart >= startDate) && ((p.ActiveEnd ?? DateOnly.FromDateTime(DateTime.Now)) <= endDate)).GroupBy(p => new PassportOnly() { Series = p.PassportSeries.ToString(), Number = p.PassportNumber });
             foreach (var group in passportHistories)
             {
                 var keyValuePair = new KeyValuePair<PassportOnly, List<PassportChanges>>(group.Key, CreatePassportHistory(group.ToList()));
@@ -122,14 +108,14 @@ namespace Passports.Services
             return passportsHistoriesByDate;
         }
 
-        public List<KeyValuePair<UssrPassportOnly, List<PassportChanges>>> GetUssrPassportsHistoriesByDate(DateOnly startDate, DateOnly endDate)
+        public List<KeyValuePair<PassportOnly, List<PassportChanges>>> GetUssrPassportsHistoriesByDate(DateOnly startDate, DateOnly endDate)
         {
-            var passportsHistoriesByDate = new List<KeyValuePair<UssrPassportOnly, List<PassportChanges>>>();
+            var passportsHistoriesByDate = new List<KeyValuePair<PassportOnly, List<PassportChanges>>>();
 
-            var passportHistories = _context.UssrPassportHistory.OrderBy(p => p.Id).Where(p => (p.ActiveStart >= startDate) && ((p.ActiveEnd ?? DateOnly.FromDateTime(DateTime.Now)) <= endDate)).GroupBy(p => new UssrPassportOnly() { Series = p.PassportSeries, Number = p.PassportNumber });
+            var passportHistories = _context.UssrPassportHistory.OrderBy(p => p.Id).Where(p => (p.ActiveStart >= startDate) && ((p.ActiveEnd ?? DateOnly.FromDateTime(DateTime.Now)) <= endDate)).GroupBy(p => new PassportOnly() { Series = p.PassportSeries, Number = p.PassportNumber });
             foreach (var group in passportHistories)
             {
-                var keyValuePair = new KeyValuePair<UssrPassportOnly, List<PassportChanges>>(group.Key, CreatePassportHistory(group.ToList()));
+                var keyValuePair = new KeyValuePair<PassportOnly, List<PassportChanges>>(group.Key, CreatePassportHistory(group.ToList()));
                 passportsHistoriesByDate.Add(keyValuePair);
             }
 
@@ -185,25 +171,9 @@ namespace Passports.Services
             return passportChanges;
         }
 
-        private bool CheckPassportFormat(string series, string number)
-        {
-            if ((!SeriesRegex.IsMatch(series)) || (!NumberRegex.IsMatch(number)))
-            {
-                return false;
-            }
+        public bool CheckPassportFormat(string series, string number) => SeriesRegex.IsMatch(series) || NumberRegex.IsMatch(number);
 
-            return true;
-        }
-
-        private bool CheckUssrPassportFormat(string series, string number)
-        {
-            if ((!UssrSeriesRegex.IsMatch(series)) || (!NumberRegex.IsMatch(number)))
-            {
-                return false;
-            }
-
-            return true;
-        }
+        public bool CheckUssrPassportFormat(string series, string number) => UssrSeriesRegex.IsMatch(series) || NumberRegex.IsMatch(number);
 
         public async void Copy()
         {
@@ -258,7 +228,6 @@ namespace Passports.Services
                     csvPassports.Clear();
                     csvUssrPassports.Clear();
                 }
-                Console.WriteLine("DONE {0}", DateTime.UtcNow.AddHours(_gmtOffset));
             }
             catch (FileNotFoundException e)
             {

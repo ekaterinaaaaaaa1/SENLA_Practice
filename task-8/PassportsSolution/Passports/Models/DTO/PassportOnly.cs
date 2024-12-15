@@ -8,7 +8,7 @@
         /// <summary>
         /// The passport series.
         /// </summary>
-        public short Series { get; set; }
+        public string Series { get; set; } = null!;
 
         /// <summary>
         /// The passport number.
@@ -17,9 +17,13 @@
 
         public override bool Equals(object? obj)
         {
-            if (obj is Passport passport)
+            if ((obj is Passport passport) && short.TryParse(Series, out short series))
             {
-                return passport.Series == Series && passport.Number == Number;
+                return passport.Series == series && passport.Number == Number;
+            }
+            if (obj is UssrPassport ussrPassport)
+            {
+                return ussrPassport.Series == Series && ussrPassport.Number == Number;
             }
 
             return false;
