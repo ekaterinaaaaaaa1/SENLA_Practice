@@ -31,7 +31,7 @@ namespace PassportSolution.Tests
 
             var controller = new PassportsController(mock.Object);
 
-            var result = controller.GetUssrPassport(series, number);
+            var result = controller.GetPassport(series, number);
             Assert.IsType<BadRequestResult>(result);
         }
     }

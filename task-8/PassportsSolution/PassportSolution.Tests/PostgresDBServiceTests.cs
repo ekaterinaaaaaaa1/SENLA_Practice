@@ -22,8 +22,8 @@ namespace Passports.Tests
             string? series = "000";
             string? number = "122333";
 
-            var result = service.GetPassport(series, number);
-            Assert.Null(result);
+            var result = service.CheckPassportFormat(series, number);
+            Assert.False(result);
         }
 
         [Fact]
@@ -36,10 +36,10 @@ namespace Passports.Tests
             var service = new PostgresDBService(mockApplicationContext.Object, mockConfiguration.Object);
 
             string? series = "XX-БО";
-            string? number = "122";
+            string? number = "122333";
 
-            var result = service.GetUssrPassport(series, number);
-            Assert.Null(result);
+            var result = service.CheckUssrPassportFormat(series, number);
+            Assert.True(result);
         }
     }
 }

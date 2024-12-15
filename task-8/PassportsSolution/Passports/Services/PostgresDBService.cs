@@ -171,9 +171,9 @@ namespace Passports.Services
             return passportChanges;
         }
 
-        public bool CheckPassportFormat(string series, string number) => SeriesRegex.IsMatch(series) || NumberRegex.IsMatch(number);
+        public bool CheckPassportFormat(string series, string number) => SeriesRegex.IsMatch(series) && NumberRegex.IsMatch(number);
 
-        public bool CheckUssrPassportFormat(string series, string number) => UssrSeriesRegex.IsMatch(series) || NumberRegex.IsMatch(number);
+        public bool CheckUssrPassportFormat(string series, string number) => UssrSeriesRegex.IsMatch(series) && NumberRegex.IsMatch(number);
 
         public async void Copy()
         {
