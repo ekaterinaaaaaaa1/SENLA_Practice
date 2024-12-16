@@ -22,7 +22,7 @@ namespace Passports.Services
         private YandexDiskService? _yandexDiskService;
 
         private readonly int _gmtOffset;
-        private const int INSERT_SIZE = 10000;
+        private readonly int _batchSize;
 
         private static string _directory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Converter", "data1");
         private static string _csvFile = Path.Combine(_directory, "Data1.csv");
@@ -55,6 +55,18 @@ namespace Passports.Services
                 }
 
                 _gmtOffset = gmtOffset;
+
+                string? batchSizeValue = _appSettings.BatchSize;
+                if (string.IsNullOrWhiteSpace(batchSizeValue))
+                {
+                    throw new EmptyConfigurationSectionException(_appSettings.BatchSize.GetType().Name);
+                }
+                if (!int.TryParse(batchSizeValue, out int batchSize))
+                {
+                    throw new ParseException();
+                }
+
+                _batchSize = batchSize;
             }
             catch (Exception ex) when (ex is ParseException || ex is EmptyConfigurationSectionException)
             {
@@ -200,7 +212,7 @@ namespace Passports.Services
                 string? line = await streamReader.ReadLineAsync();
                 while (next)
                 {
-                    for (int j = 0; j < INSERT_SIZE; j++)
+                    for (int j = 0; j < _batchSize; j++)
                     {
                         if ((line = await streamReader.ReadLineAsync()) == null)
                         {
@@ -269,7 +281,7 @@ namespace Passports.Services
                     passportHistories.Add(passportHistory);
                 }
 
-                await BulkInsertExtension<PassportHistory>.BulkInsertByBatchesAsync(_context, passportHistories);
+                await BulkInsertExtension<PassportHistory>.BulkInsertByBatchesAsync(_context, passportHistories, _batchSize);
             }
         }
 
@@ -279,7 +291,7 @@ namespace Passports.Services
             
             if (inactivePassports.Any())
             {
-                await BulkInsertExtension<Passport>.BulkInsertByBatchesAsync(_context, inactivePassports);
+                await BulkInsertExtension<Passport>.BulkInsertByBatchesAsync(_context, inactivePassports, _batchSize);
             }
         }
 
@@ -322,7 +334,7 @@ namespace Passports.Services
                     ussrPassportHistories.Add(ussrPassportHistory);
                 }
 
-                await BulkInsertExtension<UssrPassportHistory>.BulkInsertByBatchesAsync(_context, ussrPassportHistories);
+                await BulkInsertExtension<UssrPassportHistory>.BulkInsertByBatchesAsync(_context, ussrPassportHistories, _batchSize);
             }
         }
 
@@ -332,7 +344,7 @@ namespace Passports.Services
 
             if (inactiveUssrPassports.Any())
             {
-                await BulkInsertExtension<UssrPassport>.BulkInsertByBatchesAsync(_context, inactiveUssrPassports);
+                await BulkInsertExtension<UssrPassport>.BulkInsertByBatchesAsync(_context, inactiveUssrPassports, _batchSize);
             }
         }
 
