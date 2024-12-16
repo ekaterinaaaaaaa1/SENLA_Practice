@@ -1,10 +1,12 @@
 ﻿using EFCore.BulkExtensions;
+using Microsoft.Extensions.Options;
 using Passports.Converter;
 using Passports.Database;
 using Passports.Exceptions;
 using Passports.Models;
 using Passports.Models.DTO;
 using Passports.Models.Extensions;
+using Passports.Options;
 using Passports.Services.Interfaces;
 using System.Text.RegularExpressions;
 
@@ -16,11 +18,11 @@ namespace Passports.Services
     public class PostgresDBService : IDBService
     {
         private readonly ApplicationContext _context;
-        private readonly IConfiguration _configuration;
-        private readonly int _gmtOffset = 3;
-        private const int INSERT_SIZE = 10000;
+        private AppSettings? _appSettings;
+        private YandexDiskService? _yandexDiskService;
 
-        private readonly string _gmtOffsetSection = "GmtOffset";
+        private readonly int _gmtOffset;
+        private const int INSERT_SIZE = 10000;
 
         private static string _directory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Converter", "data1");
         private static string _csvFile = Path.Combine(_directory, "Data1.csv");
@@ -33,17 +35,19 @@ namespace Passports.Services
         /// PostgresDBService constructor.
         /// </summary>
         /// <param name="context">DbContext of the application.</param>
-        /// <param name="configuration">A set of key/value application configuration properties.</param>
-        public PostgresDBService(ApplicationContext context, IConfiguration configuration)
+        /// <param name="options">AppSettings section values.</param>
+        public PostgresDBService(ApplicationContext context, IOptions<AppSettings> options)
         {
             _context = context;
-            _configuration = configuration;
+            _appSettings = options.Value;
+            _yandexDiskService = new YandexDiskService(options);
+
             try
             {
-                string? gmtOffsetValue = configuration.GetSection(_gmtOffsetSection).Value;
+                string? gmtOffsetValue = _appSettings.GmtOffset;
                 if (string.IsNullOrWhiteSpace(gmtOffsetValue))
                 {
-                    throw new EmptyConfigurationSectionException(_gmtOffsetSection);
+                    throw new EmptyConfigurationSectionException(_appSettings.GmtOffset.GetType().Name);
                 }
                 if (!int.TryParse(gmtOffsetValue, out int gmtOffset))
                 {
@@ -179,8 +183,11 @@ namespace Passports.Services
         {
             try
             {
-                YandexDiskService yandexDiskService = new YandexDiskService(_configuration);
-                await yandexDiskService.DownloadFileAsync(_directory);
+                if (_yandexDiskService == null)
+                {
+                    throw new YandexDiskException();
+                }
+                await _yandexDiskService.DownloadFileAsync(_directory);
 
                 using StreamReader streamReader = new StreamReader(_csvFile);
 
@@ -188,7 +195,7 @@ namespace Passports.Services
                 List<UssrPassport> csvUssrPassports = new List<UssrPassport>();
                 List<Passport> inactivePassportsFromDb = _context.InactivePassports.ToList();
                 List<UssrPassport> inactiveUssrPassportsFromDb = _context.InactiveUssrPassports.ToList();
-                
+
                 bool next = true;
                 string? line = await streamReader.ReadLineAsync();
                 while (next)
@@ -229,9 +236,13 @@ namespace Passports.Services
                     csvUssrPassports.Clear();
                 }
             }
-            catch (FileNotFoundException e)
+            catch (FileNotFoundException ex)
             {
-                Console.WriteLine(e.Message);
+                Console.WriteLine(ex.Message);
+            }
+            catch (YandexDiskException)
+            {
+                Console.WriteLine("Access to the Yandex Disk is denied.");
             }
         }
 

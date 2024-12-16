@@ -1,4 +1,6 @@
-﻿using Passports.Exceptions;
+﻿using Microsoft.Extensions.Options;
+using Passports.Exceptions;
+using Passports.Options;
 using System.IO.Compression;
 using YandexDisk.Client.Clients;
 using YandexDisk.Client.Http;
@@ -13,20 +15,21 @@ namespace Passports.Converter
     {
         private Resource? _data1Folder;
         private DiskHttpApi? _api;
-        private readonly string _sectionName = "YandexDiskToken";
+        private AppSettings? _appSettings;
 
         /// <summary>
         /// YandexDiskService constructor.
         /// </summary>
-        /// <param name="configuration">A set of key/value application configuration properties.</param>
-        public YandexDiskService(IConfiguration configuration)
+        /// <param name="options">AppSettings section values.</param>
+        public YandexDiskService(IOptions<AppSettings> options)
         {
             try
             {
-                string? token = configuration.GetSection(_sectionName).Value;
+                _appSettings = options.Value;
+                string? token = _appSettings.YandexDiskToken;
                 if (string.IsNullOrWhiteSpace(token))
                 {
-                    throw new EmptyConfigurationSectionException(_sectionName);
+                    throw new EmptyConfigurationSectionException(_appSettings.YandexDiskToken.GetType().Name);
                 }
                 _api = new DiskHttpApi(token);
                 _data1Folder = _api.MetaInfo.GetInfoAsync(new ResourceRequest

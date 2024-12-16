@@ -5,7 +5,7 @@ namespace Passports
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-            Startup startup = new Startup(builder.Configuration);
+            var startup = new Startup(builder.Configuration);
 
             startup.ConfigureServices(builder.Services);
 

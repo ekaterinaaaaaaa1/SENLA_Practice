@@ -1,5 +1,7 @@
 ﻿using Passports.Services.Interfaces;
 using Passports.Exceptions;
+using Passports.Options;
+using Microsoft.Extensions.Options;
 
 namespace Passports.Converter
 {
@@ -7,11 +9,10 @@ namespace Passports.Converter
     /// IHostedService for data conversion.
     /// </summary>
     /// <param name="serviceScopeFactory">A factory for creating service scope for the database service.</param>
-    /// <param name="configuration">A set of key/value application configuration properties.</param>
-    public class DataConverterService(IServiceScopeFactory serviceScopeFactory, IConfiguration configuration) : BackgroundService
+    /// <param name="options">AppSettings section values.</param>
+    public class DataConverterService(IServiceScopeFactory serviceScopeFactory, IOptions<AppSettings> options) : BackgroundService
     {
-        private readonly string _gmtOffsetSection = "GmtOffset";
-        private readonly string _readingCsvTimeSection = "ReadingCsvTime";
+        private AppSettings? _appSettings;
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
@@ -21,10 +22,11 @@ namespace Passports.Converter
 
             try
             {
-                string? time = configuration.GetSection(_readingCsvTimeSection).Value;
+                _appSettings = options.Value;
+                string? time = _appSettings.ReadingCsvTime;
                 if (string.IsNullOrWhiteSpace(time))
                 {
-                    throw new EmptyConfigurationSectionException(_readingCsvTimeSection);
+                    throw new EmptyConfigurationSectionException(_appSettings.ReadingCsvTime.GetType().Name);
                 }
                 if (!TimeSpan.TryParse(time, out TimeSpan readingCsvTime))
                 {
@@ -35,10 +37,10 @@ namespace Passports.Converter
 
                 while (!stoppingToken.IsCancellationRequested)
                 {
-                    string? gmtOffsetValue = configuration.GetSection(_gmtOffsetSection).Value;
+                    string? gmtOffsetValue = _appSettings.GmtOffset;
                     if (string.IsNullOrWhiteSpace(gmtOffsetValue))
                     {
-                        throw new EmptyConfigurationSectionException(_gmtOffsetSection);
+                        throw new EmptyConfigurationSectionException(_appSettings.GmtOffset.GetType().Name);
                     }
                     if (!int.TryParse(gmtOffsetValue, out int gmtOffset))
                     {
@@ -51,7 +53,7 @@ namespace Passports.Converter
                     {
                         context.Copy();
                     }
-
+                    
                     await Task.Delay(60000);
                 }
             }
